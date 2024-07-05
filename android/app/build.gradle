@@ -2,6 +2,7 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    apply plugin: 'com.google.gms.google-services'
 }
 
 def localProperties = new Properties()
@@ -20,6 +21,15 @@ if (flutterVersionCode == null) {
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
+}
+
+def getApiKey() {
+    def Properties properties = new Properties()
+    def File file = rootProject.file(".env")
+    if (file.exists()) {
+        file.withInputStream { stream -> properties.load(stream) }
+    }
+    return properties["API_KEY"]
 }
 
 android {
@@ -49,6 +59,7 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        resValue "string", "google_maps_key", getApiKey()
     }
 
     buildTypes {
