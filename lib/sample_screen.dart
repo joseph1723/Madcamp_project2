@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:goggle_login/login_platform.dart';
+import 'package:goggle_login/point_details_screen.dart';
+import 'package:goggle_login/point_list_provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'point_list.dart'; // tab1 스크린을 정의한 파일을 import합니다.
 import 'google_map_screen.dart'; // google_map_screen을 import합니다.
 import 'theme_screen.dart';
@@ -92,7 +95,7 @@ class _SampleScreenState extends State<SampleScreen> {
       ),
       body: Center(
           child: _loginPlatform != LoginPlatform.none
-              ? _mainContent()
+              ? _mainContent(context)
               : _loginButton('login', signInWithGoogle)),
     );
   }
@@ -123,37 +126,11 @@ class _SampleScreenState extends State<SampleScreen> {
       ),
     );
   }
-  // Widget _loginButton(String path, VoidCallback onTap) {
-  //   return Card(
-  //     elevation: 5.0,
-  //     shape: const CircleBorder(),
-  //     clipBehavior: Clip.antiAlias,
-  //     child: Ink.image(
-  //       image: AssetImage('asset/$path.png'),
-  //       width: 60,
-  //       height: 60,
-  //       child: InkWell(
-  //         borderRadius: const BorderRadius.all(
-  //           Radius.circular(35.0),
-  //         ),
-  //         onTap: onTap,
-  //       ),
-  //     ),
-  //   );
-  // }
+  
+  Widget _mainContent(BuildContext context) {
 
-  // Widget _logoutButton() {
-  //   return ElevatedButton(
-  //     onPressed: signOut,
-  //     style: ButtonStyle(
-  //       backgroundColor: MaterialStateProperty.all(
-  //         const Color(0xff0165E1),
-  //       ),
-  //     ),
-  //     child: const Text('로그아웃'),
-  //   );
-  // }
-  Widget _mainContent() {
+    final pointListProvider = Provider.of<PointListProvider>(context);
+    final pointList = pointListProvider.pointList;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -184,28 +161,114 @@ class _SampleScreenState extends State<SampleScreen> {
           ),
         ),
         const SizedBox(height: 40),
-        const Text(
+        pointList != null ? _buildPointList(pointList) : _buildThemeBox(),
+        // const Text(
+        //   '오늘의 추천 테마',
+        //   style: TextStyle(fontSize: 16),
+        // ),
+        // const SizedBox(height: 20),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //   children: [
+        //     _themeBox('Theme 1', () {
+        //       // Navigate to the new screen for Theme 1
+        //       Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //             builder: (context) => const ThemeScreen(theme: 'Theme 1')),
+        //       );
+        //     }),
+        //     _themeBox('Theme 2', () {
+        //       // Navigate to the new screen for Theme 2
+        //       Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //             builder: (context) => const ThemeScreen(theme: 'Theme 2')),
+        //       );
+        //     }),
+        //   ],
+        // ),
+      ],
+    );
+  }
+
+  Widget _buildPointList(Map<String, dynamic> pointList) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Point List',
+        style: TextStyle(fontSize: 16),
+      ),
+      SizedBox(height: 20),
+      SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: pointList['points'].map<Widget>((point) {
+            return _pointBox(point);
+          }).toList(),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _pointBox(Map<String, dynamic> point) {
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PointDetail(point: point),
+        ),
+      );
+    },
+    child: Container(
+      width: 149,
+      height: 187,
+      color: Colors.grey,
+      margin: EdgeInsets.only(right: 10),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              point['name'],
+              style: TextStyle(color: Colors.white),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'ID: ${point['_id']}',
+              style: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _buildThemeBox() {
+    return Column(
+      children: [
+        Text(
           '오늘의 추천 테마',
           style: TextStyle(fontSize: 16),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _themeBox('Theme 1', () {
-              // Navigate to the new screen for Theme 1
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => const ThemeScreen(theme: 'Theme 1')),
+                MaterialPageRoute(builder: (context) => ThemeScreen(theme: 'Theme 1')),
               );
             }),
             _themeBox('Theme 2', () {
-              // Navigate to the new screen for Theme 2
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => const ThemeScreen(theme: 'Theme 2')),
+                MaterialPageRoute(builder: (context) => ThemeScreen(theme: 'Theme 2')),
               );
             }),
           ],
@@ -213,6 +276,7 @@ class _SampleScreenState extends State<SampleScreen> {
       ],
     );
   }
+
 
   Widget _themeBox(String title, VoidCallback onTap) {
     return GestureDetector(
