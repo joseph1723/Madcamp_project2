@@ -42,7 +42,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     if (permission == LocationPermission.denied) {
       // 위치 권한이 거부된 경우
       permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
         // 위치 권한이 허용되지 않은 경우
         return;
       }
@@ -78,7 +79,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
             ? {
           Marker(
             markerId: MarkerId('current_position'),
-            position: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+            position: LatLng(_currentPosition!.latitude,
+                _currentPosition!.longitude),
             infoWindow: InfoWindow(title: '현재 위치'),
           ),
         }

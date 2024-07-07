@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'point_list_provider.dart';
 import 'package:geolocator/geolocator.dart';
 
 class PointDetailsScreen extends StatelessWidget {
@@ -13,6 +15,13 @@ class PointDetailsScreen extends StatelessWidget {
         builder: (context) => PointDetail(point: point),
       ),
     );
+  }
+  void savePointList(BuildContext context) {
+    // Provider를 통해 PointListProvider에 pointList를 저장합니다.
+    Provider.of<PointListProvider>(context, listen: false).setPointList(pointList);
+
+    // 이후 원하는 작업을 수행할 수 있습니다.
+    // 예를 들어, 다른 화면으로 이동하거나 추가적인 동작을 수행할 수 있습니다.
   }
 
   Future<Position> _getCurrentLocation() async {
@@ -112,6 +121,11 @@ class PointDetailsScreen extends StatelessWidget {
                   );
                 },
               ),
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () => savePointList(context),
+              child: Text('Save to Provider'),
             ),
           ],
         ),

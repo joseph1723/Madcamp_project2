@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'point_list_provider.dart'; // PointListProvider 파일을 import합니다.
 import 'sample_screen.dart'; // SampleScreen을 정의한 파일을 import합니다.
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => PointListProvider(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
