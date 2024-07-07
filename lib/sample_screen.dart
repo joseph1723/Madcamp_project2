@@ -3,10 +3,16 @@ import 'package:goggle_login/login_platform.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'tab1_screen.dart'; // tab1 스크린을 정의한 파일을 import합니다.
 import 'google_map_screen.dart'; // google_map_screen을 import합니다.
+<<<<<<< HEAD
 import 'theme_screen.dart';
 
 class SampleScreen extends StatefulWidget {
   const SampleScreen({super.key});
+=======
+
+class SampleScreen extends StatefulWidget {
+  const SampleScreen({Key? key}) : super(key: key);
+>>>>>>> 9dc97fce1b4baa00978b621ba888f11a2f0a4a29
 
   @override
   State<SampleScreen> createState() => _SampleScreenState();
@@ -14,13 +20,19 @@ class SampleScreen extends StatefulWidget {
 
 class _SampleScreenState extends State<SampleScreen> {
   LoginPlatform _loginPlatform = LoginPlatform.none;
+<<<<<<< HEAD
   GoogleSignInAccount? _currentUser;
+=======
+>>>>>>> 9dc97fce1b4baa00978b621ba888f11a2f0a4a29
 
   void signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     if (googleUser != null) {
+<<<<<<< HEAD
       //어디에 띄워?
+=======
+>>>>>>> 9dc97fce1b4baa00978b621ba888f11a2f0a4a29
       print('name = ${googleUser.displayName}');
       print('email = ${googleUser.email}');
       print('id = ${googleUser.id}');
@@ -45,20 +57,31 @@ class _SampleScreenState extends State<SampleScreen> {
     });
   }
 
+<<<<<<< HEAD
   //하단바 만들어서 넣기
   void navigateToTab1() {
     Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => const Tab1Screen()), // Tab1Screen으로 이동합니다.
+=======
+  void navigateToTab1() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Tab1Screen()), // Tab1Screen으로 이동합니다.
+>>>>>>> 9dc97fce1b4baa00978b621ba888f11a2f0a4a29
     );
   }
 
   void navigateToGoogleMapScreen() {
     Navigator.push(
       context,
+<<<<<<< HEAD
       MaterialPageRoute(
           builder: (context) => GoogleMapScreen()), // GoogleMapScreen으로 이동합니다.
+=======
+      MaterialPageRoute(builder: (context) => GoogleMapScreen()), // GoogleMapScreen으로 이동합니다.
+>>>>>>> 9dc97fce1b4baa00978b621ba888f11a2f0a4a29
     );
   }
 
@@ -66,6 +89,7 @@ class _SampleScreenState extends State<SampleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+<<<<<<< HEAD
         title: const Text('산책꼬?'),
         actions: [
           IconButton(
@@ -87,10 +111,38 @@ class _SampleScreenState extends State<SampleScreen> {
           child: _loginPlatform != LoginPlatform.none
               ? _mainContent()
               : _loginButton('login', signInWithGoogle)),
+=======
+        title: Text('Sample Screen'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.tab), // 탭 아이콘 사용 가능
+            onPressed: navigateToTab1, // 탭1로 이동하는 함수 호출
+          ),
+          IconButton(
+            icon: Icon(Icons.map), // 지도 아이콘 사용 가능
+            onPressed: navigateToGoogleMapScreen, // Google 지도로 이동하는 함수 호출
+          ),
+        ],
+      ),
+      body: Center(
+        child: _loginPlatform != LoginPlatform.none
+            ? _logoutButton()
+            : Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _loginButton(
+              'google',
+              signInWithGoogle,
+            )
+          ],
+        ),
+      ),
+>>>>>>> 9dc97fce1b4baa00978b621ba888f11a2f0a4a29
     );
   }
 
   Widget _loginButton(String path, VoidCallback onTap) {
+<<<<<<< HEAD
     return ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
@@ -221,6 +273,35 @@ class _SampleScreenState extends State<SampleScreen> {
           ),
         ),
       ),
+=======
+    return Card(
+      elevation: 5.0,
+      shape: const CircleBorder(),
+      clipBehavior: Clip.antiAlias,
+      child: Ink.image(
+        image: AssetImage('asset/$path.png'),
+        width: 60,
+        height: 60,
+        child: InkWell(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(35.0),
+          ),
+          onTap: onTap,
+        ),
+      ),
+    );
+  }
+
+  Widget _logoutButton() {
+    return ElevatedButton(
+      onPressed: signOut,
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(
+          const Color(0xff0165E1),
+        ),
+      ),
+      child: const Text('로그아웃'),
+>>>>>>> 9dc97fce1b4baa00978b621ba888f11a2f0a4a29
     );
   }
 }
