@@ -6,7 +6,7 @@ import 'google_map_screen.dart'; // google_map_screen을 import합니다.
 import 'theme_screen.dart';
 
 class SampleScreen extends StatefulWidget {
-  const SampleScreen({Key? key}) : super(key: key);
+  const SampleScreen({super.key});
 
   @override
   State<SampleScreen> createState() => _SampleScreenState();
@@ -45,18 +45,20 @@ class _SampleScreenState extends State<SampleScreen> {
     });
   }
 
-  //하단바 만들어서 넣기 
+  //하단바 만들어서 넣기
   void navigateToTab1() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Tab1Screen()), // Tab1Screen으로 이동합니다.
+      MaterialPageRoute(
+          builder: (context) => const Tab1Screen()), // Tab1Screen으로 이동합니다.
     );
   }
 
   void navigateToGoogleMapScreen() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => GoogleMapScreen()), // GoogleMapScreen으로 이동합니다.
+      MaterialPageRoute(
+          builder: (context) => GoogleMapScreen()), // GoogleMapScreen으로 이동합니다.
     );
   }
 
@@ -64,28 +66,27 @@ class _SampleScreenState extends State<SampleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('산책꼬?'),
+        title: const Text('산책꼬?'),
         actions: [
           IconButton(
-            icon: Icon(Icons.tab), // 탭 아이콘 사용 가능
+            icon: const Icon(Icons.tab), // 탭 아이콘 사용 가능
             onPressed: navigateToTab1, // 탭1로 이동하는 함수 호출
           ),
           IconButton(
-            icon: Icon(Icons.map), // 지도 아이콘 사용 가능
+            icon: const Icon(Icons.map), // 지도 아이콘 사용 가능
             onPressed: navigateToGoogleMapScreen, // Google 지도로 이동하는 함수 호출
           ),
           if (_loginPlatform != LoginPlatform.none)
             IconButton(
-              icon: Icon(Icons.logout),
+              icon: const Icon(Icons.logout),
               onPressed: signOut,
-          ),
+            ),
         ],
       ),
       body: Center(
-        child: _loginPlatform != LoginPlatform.none
-            ? _mainContent()
-            : _loginButton('login', signInWithGoogle)
-      ),
+          child: _loginPlatform != LoginPlatform.none
+              ? _mainContent()
+              : _loginButton('login', signInWithGoogle)),
     );
   }
 
@@ -96,7 +97,7 @@ class _SampleScreenState extends State<SampleScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
-        padding: EdgeInsets.all(0),
+        padding: const EdgeInsets.all(0),
       ),
       child: Ink(
         decoration: BoxDecoration(
@@ -108,7 +109,7 @@ class _SampleScreenState extends State<SampleScreen> {
           ),
         ),
         child: Container(
-          constraints: BoxConstraints(maxWidth: 300.0, maxHeight: 60.0),
+          constraints: const BoxConstraints(maxWidth: 300.0, maxHeight: 60.0),
           alignment: Alignment.center,
           child: null,
         ),
@@ -150,37 +151,37 @@ class _SampleScreenState extends State<SampleScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: '${_currentUser?.displayName ?? "User"}',
-              style: TextStyle(
-                color: Color(0xFFA8DF8E),
-                fontSize: 20,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-                height: 0,
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: _currentUser?.displayName ?? "User",
+                style: const TextStyle(
+                  color: Color(0xFFA8DF8E),
+                  fontSize: 20,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                  height: 0,
+                ),
               ),
-            ),
-            TextSpan(
-              text: '님 안녕하세요!\n오늘도 즐거운 산책을 시작해볼까요?',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-                height: 0,
+              const TextSpan(
+                text: '님 안녕하세요!\n오늘도 즐거운 산책을 시작해볼까요?',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                  height: 0,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-        SizedBox(height: 40),
-        Text(
+        const SizedBox(height: 40),
+        const Text(
           '오늘의 추천 테마',
           style: TextStyle(fontSize: 16),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -188,14 +189,16 @@ class _SampleScreenState extends State<SampleScreen> {
               // Navigate to the new screen for Theme 1
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ThemeScreen(theme: 'Theme 1')),
+                MaterialPageRoute(
+                    builder: (context) => const ThemeScreen(theme: 'Theme 1')),
               );
             }),
             _themeBox('Theme 2', () {
               // Navigate to the new screen for Theme 2
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ThemeScreen(theme: 'Theme 2')),
+                MaterialPageRoute(
+                    builder: (context) => const ThemeScreen(theme: 'Theme 2')),
               );
             }),
           ],
@@ -214,11 +217,10 @@ class _SampleScreenState extends State<SampleScreen> {
         child: Center(
           child: Text(
             title,
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
         ),
       ),
     );
   }
-
 }
