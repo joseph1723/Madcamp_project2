@@ -124,82 +124,6 @@ class _MyProfilePageState extends State<MyProfilePage> {
       appBar: AppBar(
         title: Text('${currentUser?.displayName} 님의 프로필'),
       ),
-      // body: SingleChildScrollView( // Center widget을 사용하여 전체를 가운데 정렬
-      //   child: Padding(
-      //     padding: const EdgeInsets.all(16.0),
-      //     child: Column(
-      //       crossAxisAlignment: CrossAxisAlignment.center, // 텍스트 중앙 정렬
-      //       children: <Widget>[
-      //         CircleAvatar(
-      //           radius: 100,
-      //           backgroundImage: AssetImage('asset/img1.png'), // 로컬 이미지 경로
-      //         ),
-      //   const SizedBox(height: 30),
-      //         Card(
-      //           child: Padding(
-      //             padding: const EdgeInsets.all(30.0),
-      //             child: Column(
-      //               crossAxisAlignment: CrossAxisAlignment.center, // 텍스트 중앙 정렬
-      //               children: [
-      //                 Text(
-      //                   'Name: $_name',
-      //                   style: const TextStyle(fontSize: 18),
-      //                 ),
-      //                 Text(
-      //                   'Email: $email',
-      //                   style: const TextStyle(fontSize: 18),
-      //                 ),
-      //                 Text(
-      //                   '자기소개: $_desc',
-      //                   style: const TextStyle(fontSize: 18),
-      //                 ),
-      //               ],
-      //             ),
-      //           ),
-      //         ),
-      //         const SizedBox(height: 40),
-      //         ElevatedButton(
-      //           style: ElevatedButton.styleFrom(
-      //             backgroundColor: const Color(0xFFA8DF8E), // 버튼 색상 변경
-      //           ),
-      //           onPressed: () {
-      //             Navigator.push(
-      //               context,
-      //               MaterialPageRoute(
-      //                 builder: (context) => EditProfilePage(
-      //                   initialName: _name,
-      //                   initialDesc: _desc,
-      //                   initialPhoneNumber: _phoneNumber,
-      //                   onSave: (String name, String desc, String phoneNumber) async {
-      //                     try {
-      //                       await updateUserLogin(userModelProvider.userId!, name, desc, phoneNumber);
-      //                       // 업데이트 성공 후 작업 (예: 성공 메시지 표시)
-      //                       ScaffoldMessenger.of(context).showSnackBar(
-      //                         const SnackBar(
-      //                           content: Text('사용자 정보가 성공적으로 업데이트되었습니다.'),
-      //                           duration: Duration(seconds: 3),
-      //                         ),
-      //                       );
-      //                     } catch (e) {
-      //                       // 업데이트 실패 후 작업 (예: 에러 메시지 표시)
-      //                       ScaffoldMessenger.of(context).showSnackBar(
-      //                         SnackBar(
-      //                           content: Text('사용자 정보 업데이트에 실패했습니다. $e'),
-      //                           duration: const Duration(seconds: 3),
-      //                         ),
-      //                       );
-      //                     }
-      //                   },
-      //                 ),
-      //               ),
-      //             );
-      //           },
-      //           child: const Text('프로필 수정'),
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -289,12 +213,52 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   },
                   child: const Text('프로필 수정'),
                 ),
+                const SizedBox(height: 30),
+                const Text(
+                  '내가 획득한 뱃지',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start, // 왼쪽 정렬
+                    children: <Widget>[
+                      BadgeBox(imagePath: 'asset/img1.png'),
+                      BadgeBox(imagePath: 'asset/img2.png'),
+                      BadgeBox(imagePath: 'asset/img3.png'),
+                      BadgeBox(imagePath: 'asset/img4.png'),
+                      BadgeBox(imagePath: 'asset/img5.png'),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
 
+class BadgeBox extends StatelessWidget {
+  final String imagePath;
+
+  const BadgeBox({required this.imagePath});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Container(
+        width: 200,
+        height: 200,
+        decoration: BoxDecoration(
+          border: Border.all(color: Color(0xFFA8DF8E)), // 테두리 색상 변경
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Image.asset(imagePath),
+      ),
     );
   }
 }
