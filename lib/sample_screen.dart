@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:goggle_login/login_platform.dart';
 import 'package:goggle_login/point_details_screen.dart';
@@ -28,6 +30,10 @@ class _SampleScreenState extends State<SampleScreen> {
       print('email = ${googleUser.email}');
       print('id = ${googleUser.id}');
 
+      final String token = googleUser.email; // 예시로 email을 token으로 사용
+
+      // 토큰을 이용하여 id를 가져오는 함수 호출
+      await getIdByToken(token);
       // Get the authentication object
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
@@ -38,6 +44,65 @@ class _SampleScreenState extends State<SampleScreen> {
       setState(() {
         _loginPlatform = LoginPlatform.google;
       });
+    }
+  }
+  Future<void> getIdByToken(String token) async {
+    const String baseUrl = 'http://172.10.7.128:80'; // 서버의 기본 URL
+    final String url = '$baseUrl/tokenstoid/$token';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        var userId = "";
+        if(data == null){
+          userId = await tokentoid(token);
+        }
+        else {
+          userId = data['user_id'] as String;
+        }
+        if (userId != null) {
+          print('Returned id: $userId');
+          // 여기에서 id를 활용하여 추가적인 작업을 수행할 수 있습니다.
+        } else {
+          print('User id not found.');
+        }
+      } else {
+        print('Failed to get user id. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching user id: $e');
+    }
+  }
+
+  Future<String> tokentoid(String token) async {
+    const String url = 'http://172.10.7.128:80/tokenstoid'; // 포인트를 추가할 엔드포인트 URL
+
+    try {
+      // 포인트 리스트 생성하기
+      final response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'token': token,
+          'user_id': token.split('@gmail')[0],
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        var result = jsonDecode(response.body);
+        print('Token added successfully');
+        return(token.split('@gmail')[0]);
+      } else {
+        print('Failed to add token. Status code: ${response.statusCode}');
+        throw Exception('Failed to add user id');
+      }
+    } catch (error) {
+      print('Error adding token: $error');
+      throw Exception('Failed to add user id');
     }
   }
 
