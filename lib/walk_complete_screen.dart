@@ -95,9 +95,49 @@ class _WalkCompletePageState extends State<WalkCompletePage> {
                 },
                 child: Text('돌아가기'),
               ),
+            SizedBox(height: 32),
+            Text(
+              '당신의 뱃지', // 뱃지 섹션 제목
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16),
+            BadgeBox(
+              imagePath: 'asset/${widget.pointListName}.png', // 뱃지 이미지 경로
+              description: '${widget.pointListName}를 완주한 증표!!', // 뱃지 설명
+            ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class BadgeBox extends StatelessWidget {
+  final String imagePath;
+  final String description;
+
+  const BadgeBox({Key? key, required this.imagePath, required this.description}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Image.asset(imagePath), // 뱃지 이미지 표시
+        ),
+        SizedBox(height: 8),
+        Text(
+          description,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 14),
+        ),
+      ],
     );
   }
 }

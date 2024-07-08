@@ -152,7 +152,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
         if (coordinates != null && coordinates.length == 2) {
           final latitude = coordinates[0];
           final longitude = coordinates[1];
-          double distanceInMeters = 999999.0;
+          double distanceInMeters = 0.0;
 
           if (latitude != null && longitude != null && _currentPosition != null) {
             distanceInMeters = Geolocator.distanceBetween(
@@ -259,7 +259,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   }
 
   Widget _pointBox(Map<String, dynamic> point) {
-    double distanceInMeters = 999999.0;
+    double distanceInMeters = 0.0;
     if (_currentPosition != null) {
       final lat = point['location']['coordinates'][0];
       final lng = point['location']['coordinates'][1];
