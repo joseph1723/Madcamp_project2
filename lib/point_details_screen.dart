@@ -6,7 +6,8 @@ import 'package:geolocator/geolocator.dart';
 class PointDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> pointList;
 
-  const PointDetailsScreen({Key? key, required this.pointList}) : super(key: key);
+  const PointDetailsScreen({Key? key, required this.pointList})
+      : super(key: key);
 
   @override
   _PointDetailsScreenState createState() => _PointDetailsScreenState();
@@ -22,7 +23,8 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
     distancesFuture = _calculateDistances();
   }
 
-  void navigateToPointDetails(BuildContext context, Map<String, dynamic> point) {
+  void navigateToPointDetails(
+      BuildContext context, Map<String, dynamic> point) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -32,7 +34,8 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
   }
 
   void savePointList(BuildContext context) {
-    Provider.of<PointListProvider>(context, listen: false).setPointList(widget.pointList);
+    Provider.of<PointListProvider>(context, listen: false)
+        .setPointList(widget.pointList);
   }
 
   Future<Position> _getCurrentLocation() async {
@@ -56,7 +59,8 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
       throw Exception('Location permissions are permanently denied');
     }
 
-    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
   }
 
   Future<List<double>> _calculateDistances() async {
@@ -76,12 +80,36 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
     return distances;
   }
 
+  void _showPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Popup Title'),
+          content: Text('This is the popup content.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.pointList['name']),
         actions: [
+          IconButton(
+            icon: Image.asset('asset/view.png'),
+            onPressed: () {
+              _showPopup(context);
+            },
+          ),
           IconButton(
             icon: Stack(
               alignment: Alignment.center,
@@ -137,7 +165,8 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Distance: ${distance.toStringAsFixed(2)} meters'),
+                                Text(
+                                    'Distance: ${distance.toStringAsFixed(2)} meters'),
                                 Text('ID: ${point['_id']}'),
                               ],
                             ),
@@ -151,9 +180,18 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
               ),
             ),
             SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () => savePointList(context),
-              child: Text('Save to Provider'),
+            Center(
+              child: ElevatedButton(
+                onPressed: () => savePointList(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFA8DF8E), // 버튼 색상
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10), // 코너 반경
+                  ),
+                  minimumSize: Size(200, 50), // 버튼 크기
+                ),
+                child: Text('테마 선택'),
+              ),
             ),
           ],
         ),
@@ -202,7 +240,8 @@ class _PointDetailState extends State<PointDetail> {
       throw Exception('Location permissions are permanently denied');
     }
 
-    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
   }
 
   Future<double> _calculateDistance() async {
@@ -245,7 +284,8 @@ class _PointDetailState extends State<PointDetail> {
                   SizedBox(height: 16.0),
                   Text('Name: ${widget.point['name']}'),
                   SizedBox(height: 8.0),
-                  Text('Location: [${widget.point['location']['coordinates'].join(', ')}]'),
+                  Text(
+                      'Location: [${widget.point['location']['coordinates'].join(', ')}]'),
                   SizedBox(height: 8.0),
                   Text('ID: ${widget.point['_id']}'),
                   SizedBox(height: 16.0),
@@ -266,7 +306,8 @@ class _PointDetailState extends State<PointDetail> {
                         return Text('Error calculating distance');
                       } else {
                         double distance = snapshot.data!;
-                        return Text('Distance to Point: ${distance.toStringAsFixed(2)} meters');
+                        return Text(
+                            'Distance to Point: ${distance.toStringAsFixed(2)} meters');
                       }
                     },
                   ),
