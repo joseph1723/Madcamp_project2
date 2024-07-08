@@ -17,9 +17,30 @@ class _Tab1ScreenState extends State<Tab1Screen> {
   List<Map<String, dynamic>> filteredPointLists = [];
   TextEditingController _searchController = TextEditingController();
 
+
+  @override
+  void initState() {
+    super.initState();
+    getPointsLists(); // 초기에 데이터 불러오기
+
+    _searchController.addListener(_filterPoints);
+
+    // Tab1Screen이 화면에 나타날 때마다 데이터 다시 불러오기
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      getPointsLists();
+    });
+
+  }
+  void onRouteChanged() {
+    if (ModalRoute.of(context)?.isCurrent == true) {
+      // 현재 페이지가 화면에 보일 때만 데이터 다시 불러오기
+      getPointsLists();
+    }
+  }
+
   Future<void> getPointsLists() async {
     String url = baseUrl;
-
+    print("GET CALLED");
     try {
       final response = await http.get(Uri.parse(url));
 
@@ -38,12 +59,6 @@ class _Tab1ScreenState extends State<Tab1Screen> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    getPointsLists();
-    _searchController.addListener(_filterPoints);
-  }
 
   void _filterPoints() {
     final query = _searchController.text.toLowerCase();
@@ -61,7 +76,9 @@ class _Tab1ScreenState extends State<Tab1Screen> {
       MaterialPageRoute(
         builder: (context) => PointDetailsScreen(pointList: pointList),
       ),
-    );
+    ).then((_){
+      getPointsLists();
+    });
   }
 
   @override

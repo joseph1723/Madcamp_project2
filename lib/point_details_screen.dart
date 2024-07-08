@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'point_list_provider.dart';
 import 'package:geolocator/geolocator.dart';
+import 'dart:convert';
+import 'user_model.dart';
+import 'package:http/http.dart' as http;
+
 
 class PointDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> pointList;
@@ -21,6 +25,17 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
   void initState() {
     super.initState();
     distancesFuture = _calculateDistances();
+
+
+    final userModel = Provider.of<UserModel>(context, listen: false);
+    final likedPeople = widget.pointList['likePeople'];
+    if (userModel != null && userModel.userId != null && likedPeople != null) {
+      if (likedPeople.contains(userModel.userId)) {
+        setState(() {
+          isFavorited = true;
+        });
+      }
+    }
   }
 
   void navigateToPointDetails(
@@ -80,54 +95,204 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
     return distances;
   }
 
-  void _showPopup(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-        ),
-        titlePadding: EdgeInsets.only(top: 20, left: 20, right: 20),
-        contentPadding: EdgeInsets.symmetric(horizontal: 20),
-        actionsPadding: EdgeInsets.only(bottom: 20, right: 20),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('같이 걸어요 ><'),
-            IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-        content: Container(
-          width: MediaQuery.of(context).size.width * 0.8,
-          height: MediaQuery.of(context).size.height * 0.4,
-          child: _buildDummyList(),
-        ),
+
+
+  Future<void> editLikedPeople(bool isFavorite, String pointListName) async {
+    setState(() {
+      isFavorited = isFavorite;
+    });
+    if (isFavorite) {
+      await addLikedPerson(pointListName);
+    } else {
+      await removeLikedPerson(pointListName);
+    }
+    // Update the likePeople list in the popup
+  }
+
+  Future<void> addLikedPerson(String pointListName) async {
+    const baseUrl = 'http://172.10.7.128:80'; // 서버의 기본 URL
+    final user_id = Provider.of<UserModel>(context, listen: false).userId; // 추가할 사용자의 user_id
+
+    try {
+      // 특정 포인트 리스트 조회하여 ID 가져오기
+      final getPointListUrl = Uri.parse('$baseUrl/pointslist/$pointListName');
+      final getPointListResponse = await http.get(getPointListUrl);
+
+      if (getPointListResponse.statusCode != 200) {
+        throw Exception('Failed to fetch point list! HTTP status: ${getPointListResponse.statusCode}');
+      }
+
+      final pointList = jsonDecode(getPointListResponse.body);
+      final pointListId = pointList['_id'];
+
+      // LikedPeople에 사용자 추가하기
+      final addLikedPersonUrl = Uri.parse('$baseUrl/pointslist/$pointListId/add-liked-person');
+      final addLikedPersonResponse = await http.put(
+        addLikedPersonUrl,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'user_id': user_id}),
       );
-    },
-  );
-}
 
-Widget _buildDummyList() {
-  final dummyData = List.generate(20, (index) {
-    return {'user_id': 'user_$index', 'phone_number': '123-456-789$index'};
-  });
+      if (addLikedPersonResponse.statusCode != 200) {
+        throw Exception('Failed to add liked person! HTTP status: ${addLikedPersonResponse.statusCode}');
+      }
 
-  return Scrollbar(
-    child: ListView.builder(
-      itemCount: dummyData.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(dummyData[index]['user_id']!),
-          subtitle: Text(dummyData[index]['phone_number']!),
+      final updatedPointList = jsonDecode(addLikedPersonResponse.body);
+      print('Updated point list: $updatedPointList');
+
+      // Update the likePeople list in the popup
+      setState(() {
+        widget.pointList['likePeople'].add(updatedPointList['user_id']);
+      });
+    } catch (error) {
+      print('Error adding liked person: $error');
+    }
+  }
+
+  Future<void> removeLikedPerson(String pointListName) async {
+    const baseUrl = 'http://172.10.7.128:80'; // 서버의 기본 URL
+    final user_id = Provider.of<UserModel>(context, listen: false).userId; // 제거할 사용자의 user_id
+
+    try {
+      // 특정 포인트 리스트 조회하여 ID 가져오기
+      final getPointListUrl = Uri.parse('$baseUrl/pointslist/$pointListName');
+      final getPointListResponse = await http.get(getPointListUrl);
+
+      if (getPointListResponse.statusCode != 200) {
+        throw Exception('Failed to fetch point list! HTTP status: ${getPointListResponse.statusCode}');
+      }
+
+      final pointList = jsonDecode(getPointListResponse.body);
+      final pointListId = pointList['_id'];
+
+      // LikedPeople에서 사용자 제거하기
+      final removeLikedPersonUrl = Uri.parse('$baseUrl/pointslist/$pointListId/remove-liked-person');
+      final removeLikedPersonResponse = await http.put(
+        removeLikedPersonUrl,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'user_id': user_id}),
+      );
+
+      if (removeLikedPersonResponse.statusCode != 200) {
+        throw Exception('Failed to remove liked person! HTTP status: ${removeLikedPersonResponse.statusCode}');
+      }
+
+      final updatedPointList = jsonDecode(removeLikedPersonResponse.body);
+      print('Updated point list: $updatedPointList');
+
+      // Update the likePeople list in the popup
+      setState(() {
+        widget.pointList['likePeople'].remove(updatedPointList['user_id']);
+      });
+    } catch (error) {
+      print('Error removing liked person: $error');
+    }
+  }
+
+  void _showPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              titlePadding: EdgeInsets.only(top: 20, left: 20, right: 20),
+              contentPadding: EdgeInsets.symmetric(horizontal: 20),
+              actionsPadding: EdgeInsets.only(bottom: 20, right: 20),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('같이 걸어요 ><'),
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+              content: Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.height * 0.4,
+                child: _buildDummyList(widget.pointList['name']),
+              ),
+            );
+          },
         );
       },
-    ),
-  );
-}
+    );
+  }
+
+
+  Future<List<dynamic>> getLikePeopleFromListByName(String name) async {
+    const String baseUrl = 'http://172.10.7.128:80/pointslist/';
+    final String url = '$baseUrl$name';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode != 200) {
+        print('Response not ok with url: $url, status: ${response.statusCode}, statusText: ${response.reasonPhrase}');
+        throw Exception('HTTP error! Status: ${response.statusCode}');
+      }
+
+      final data = jsonDecode(response.body);
+      print('Fetched point list: $data');
+      return data['likePeople'] as List<dynamic>;
+    } catch (error) {
+      print('Error fetching point list: $error');
+      rethrow;
+    }
+  }
+
+  Widget _buildDummyList(String name) {
+    return FutureBuilder<List<dynamic>>(
+      future: getLikePeopleFromListByName(name),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error fetching data'));
+        } else if (!snapshot.hasData || snapshot.data == null) {
+          return Center(child: Text('No data available'));
+        } else {
+          final likePeople = snapshot.data!;
+          return Scrollbar(
+            child: ListView.builder(
+              itemCount: likePeople.length,
+              itemBuilder: (context, index) {
+                final item = likePeople[index];
+                if (item == null) {
+                  return SizedBox(); // 또는 다른 기본 위젯을 반환하여 처리
+                }
+                return ListTile(
+                  title: Text(item.toString()), // toString()을 사용하여 문자열로 변환
+                );
+              },
+            ),
+          );
+        }
+      },
+    );
+  }
+  // Widget _buildDummyList(List<dynamic> name) {
+  //   return Scrollbar(
+  //     child: ListView.builder(
+  //       itemCount: likePeople.length,
+  //       itemBuilder: (context, index) {
+  //         // Null 체크 추가
+  //         final item = likePeople[index];
+  //         if (item == null) {
+  //           return SizedBox(); // 또는 다른 기본 위젯을 반환하여 처리
+  //         }
+  //         return ListTile(
+  //           title: Text(item.toString()), // toString()을 사용하여 문자열로 변환
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +312,7 @@ Widget _buildDummyList() {
               children: [
                 Icon(
                   Icons.favorite,
-                  color: Colors.black, // 테두리 색상
+                  color: Colors.black,
                   size: 30.0,
                 ),
                 Icon(
@@ -161,6 +326,7 @@ Widget _buildDummyList() {
               setState(() {
                 isFavorited = !isFavorited;
               });
+              editLikedPeople(isFavorited, widget.pointList['name']);
             },
           ),
         ],
@@ -196,8 +362,7 @@ Widget _buildDummyList() {
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                    'Distance: ${distance.toStringAsFixed(2)} meters'),
+                                Text('Distance: ${distance.toStringAsFixed(2)} meters'),
                                 Text('ID: ${point['_id']}'),
                               ],
                             ),
@@ -215,11 +380,11 @@ Widget _buildDummyList() {
               child: ElevatedButton(
                 onPressed: () => savePointList(context),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFA8DF8E), // 버튼 색상
+                  backgroundColor: Color(0xFFA8DF8E),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10), // 코너 반경
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  minimumSize: Size(200, 50), // 버튼 크기
+                  minimumSize: Size(200, 50),
                 ),
                 child: Text('테마 선택'),
               ),
@@ -230,6 +395,7 @@ Widget _buildDummyList() {
     );
   }
 }
+
 
 class PointDetail extends StatefulWidget {
   final Map<String, dynamic> point;
