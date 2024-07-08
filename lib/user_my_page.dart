@@ -224,11 +224,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start, // 왼쪽 정렬
                     children: <Widget>[
-                      BadgeBox(imagePath: 'asset/img1.png'),
-                      BadgeBox(imagePath: 'asset/img2.png'),
-                      BadgeBox(imagePath: 'asset/img3.png'),
-                      BadgeBox(imagePath: 'asset/img4.png'),
-                      BadgeBox(imagePath: 'asset/img5.png'),
+                      BadgeBox(imagePath: 'asset/img1.png', description: '첫 번째 뱃지'),
+                      BadgeBox(imagePath: 'asset/img2.png', description: '첫 번째 뱃지'),
+                      BadgeBox(imagePath: 'asset/img3.png', description: '첫 번째 뱃지'),
+                      BadgeBox(imagePath: 'asset/img4.png', description: '첫 번째 뱃지'),
+                      BadgeBox(imagePath: 'asset/img5.png', description: '첫 번째 뱃지'),
                     ],
                   ),
                 ),
@@ -243,21 +243,32 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
 class BadgeBox extends StatelessWidget {
   final String imagePath;
+  final String description; // 새로 추가된 설명 파라미터
 
-  const BadgeBox({required this.imagePath});
+  const BadgeBox({required this.imagePath, required this.description});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Container(
-        width: 200,
-        height: 200,
-        decoration: BoxDecoration(
-          border: Border.all(color: Color(0xFFA8DF8E)), // 테두리 색상 변경
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Image.asset(imagePath),
+      child: Column(
+        children: [
+          Container(
+            width: 200,
+            height: 200,
+            decoration: BoxDecoration(
+              border: Border.all(color: Color(0xFFA8DF8E)),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Image.asset(imagePath),
+          ),
+          SizedBox(height: 8), // 이미지와 설명 사이의 간격
+          Text(
+            description,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14),
+          ),
+        ],
       ),
     );
   }

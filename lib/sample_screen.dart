@@ -235,7 +235,35 @@ class _SampleScreenState extends State<SampleScreen> {
       body: Center(
           child: _loginPlatform != LoginPlatform.none
               ? _mainContent(context)
-              : _loginButton('login', signInWithGoogle)),
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 40), // 상단 여백 추가
+                    Text(
+                      'Login',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _loginButton('login', signInWithGoogle),
+                          SizedBox(height: 50), // 로그인 버튼과 이미지 사이 간격
+                          Image.asset(
+                            'asset/leaf.png',
+                            width: 150, // 이미지 크기 조절 (필요에 따라 조정)
+                            height: 150,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                ),
+
     );
   }
 
@@ -258,7 +286,7 @@ class _SampleScreenState extends State<SampleScreen> {
           ),
         ),
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 300.0, maxHeight: 60.0),
+          constraints: const BoxConstraints(maxWidth: 294.0, maxHeight: 50.0),
           alignment: Alignment.center,
           child: null,
         ),
