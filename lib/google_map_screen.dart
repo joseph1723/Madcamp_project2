@@ -135,6 +135,14 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
             ),
           ),
           pointList != null ? _buildPointList(pointList) : Container(),
+          if (pointList != null && pointList['points'].isNotEmpty)
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton(
+            onPressed: _moveCameraToCurrentLocation,
+            child: const Text('걷기 시작'),
+          ),
+        ),
         ],
       ),
     );
@@ -183,6 +191,21 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       ),
     );
   }
+
+  void _moveCameraToCurrentLocation() {
+  if (_currentPosition != null) {
+    _controller?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+          zoom: 14,
+        ),
+      ),
+    );
+  } else {
+    print('Current position is null');
+  }
+}
 
   void _moveCameraToPoint(LatLng target) {
     _controller?.animateCamera(

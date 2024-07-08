@@ -41,9 +41,11 @@ class _SampleScreenState extends State<SampleScreen> {
       print('Access token = ${googleAuth.accessToken}');
       print('ID token = ${googleAuth.idToken}');
 
+      if (mounted) {
       setState(() {
         _loginPlatform = LoginPlatform.google;
       });
+    }
     }
   }
   Future<void> getIdByToken(String token) async {
