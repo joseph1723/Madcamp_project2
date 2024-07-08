@@ -98,6 +98,26 @@ class _SampleScreenState extends State<SampleScreen> {
     }
   }
 
+  Future<List<Map<String, dynamic>>> getPointsLists() async {
+    String url = 'http://172.10.7.128:80/pointslist/';
+    print("Get in getPointsLists");
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as List;
+        List<Map<String, dynamic>> pointLists = data.map((item) => Map<String, dynamic>.from(item)).toList();
+        return pointLists;
+      } else {
+        print('Response not ok with url: $url, status: ${response.statusCode}, statusText: ${response.reasonPhrase}');
+        throw Exception('HTTP error! Status: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error fetching point lists: $error');
+      throw error; // 예외 다시 던지기
+    }
+  }
+
   Future<String> tokentoid(String token, String name) async {
     const String url = 'http://172.10.7.128:80/tokenstoid'; // 포인트를 추가할 엔드포인트 URL
 
@@ -414,32 +434,48 @@ Widget _pointBox(Map<String, dynamic> point) {
   );
 }
 
-Widget _buildThemeBox() {
-    return Column(
-      children: [
-        Text(
-          '오늘의 추천 테마',
-          style: TextStyle(fontSize: 22),
-        ),
-        SizedBox(height: 30),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _themeBox('Theme 1', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ThemeScreen(theme: 'Theme 1')),
-              );
-            }),
-            _themeBox('Theme 2', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ThemeScreen(theme: 'Theme 2')),
-              );
-            }),
-          ],
-        ),
-      ],
+  Widget _buildThemeBox() {
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: getPointsLists(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (snapshot.hasData) {
+          List<Map<String, dynamic>> pointLists = snapshot.data!;
+          return Column(
+            children: [
+              Text(
+                '오늘의 추천 테마',
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  if (pointLists.length > 0)
+                    _themeBox('${pointLists[0]['name']}', () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => PointDetailsScreen(pointList: pointLists[0])),
+                      );
+                    }),
+                  if (pointLists.length > 1)
+                    _themeBox('${pointLists[1]['name']}', () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => PointDetailsScreen(pointList: pointLists[1])),
+                      );
+                    }),
+                ],
+              ),
+            ],
+          );
+        } else {
+          return Center(child: Text('No data'));
+        }
+      },
     );
   }
 
