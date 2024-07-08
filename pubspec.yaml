@@ -76,6 +76,7 @@ flutter:
     - asset/weather1.png
     - asset/weather2.png
     - asset/sun.png
+    - asset/view.png
     
   #   - images/a_dot_ham.jpeg
 

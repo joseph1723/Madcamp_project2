@@ -307,14 +307,14 @@ class _SampleScreenState extends State<SampleScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 20.0), // 왼쪽 끝에 패딩 추가
+            padding: const EdgeInsets.only(left: 30.0), // 왼쪽 끝에 패딩 추가
             child: Image.asset('asset/weather1.png', height: 50),
           ),
           Spacer(),
           Image.asset('asset/weather2.png', height: 50),
           Spacer(),
           Padding(
-            padding: const EdgeInsets.only(right: 20.0), // 오른쪽 끝에 패딩 추가
+            padding: const EdgeInsets.only(right: 30.0), // 오른쪽 끝에 패딩 추가
             child: Image.asset('asset/sun.png', height: 50),
           ),
           SizedBox(height: 5),

@@ -3,10 +3,24 @@ import 'package:provider/provider.dart';
 import 'point_list_provider.dart';
 import 'package:geolocator/geolocator.dart';
 
-class PointDetailsScreen extends StatelessWidget {
+class PointDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> pointList;
 
   const PointDetailsScreen({Key? key, required this.pointList}) : super(key: key);
+
+  @override
+  _PointDetailsScreenState createState() => _PointDetailsScreenState();
+}
+
+class _PointDetailsScreenState extends State<PointDetailsScreen> {
+  bool isFavorited = false;
+  late Future<List<double>> distancesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    distancesFuture = _calculateDistances();
+  }
 
   void navigateToPointDetails(BuildContext context, Map<String, dynamic> point) {
     Navigator.push(
@@ -16,12 +30,9 @@ class PointDetailsScreen extends StatelessWidget {
       ),
     );
   }
-  void savePointList(BuildContext context) {
-    // Provider를 통해 PointListProvider에 pointList를 저장합니다.
-    Provider.of<PointListProvider>(context, listen: false).setPointList(pointList);
 
-    // 이후 원하는 작업을 수행할 수 있습니다.
-    // 예를 들어, 다른 화면으로 이동하거나 추가적인 동작을 수행할 수 있습니다.
+  void savePointList(BuildContext context) {
+    Provider.of<PointListProvider>(context, listen: false).setPointList(widget.pointList);
   }
 
   Future<Position> _getCurrentLocation() async {
@@ -48,24 +59,52 @@ class PointDetailsScreen extends StatelessWidget {
     return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   }
 
-  Future<double> _calculateDistance(Map<String, dynamic> point) async {
+  Future<List<double>> _calculateDistances() async {
     Position currentPosition = await _getCurrentLocation();
-    double pointLatitude = point['location']['coordinates'][0];
-    double pointLongitude = point['location']['coordinates'][1];
-
-    return Geolocator.distanceBetween(
-      currentPosition.latitude,
-      currentPosition.longitude,
-      pointLatitude,
-      pointLongitude,
-    );
+    List<double> distances = [];
+    for (var point in widget.pointList['points']) {
+      double pointLatitude = point['location']['coordinates'][0];
+      double pointLongitude = point['location']['coordinates'][1];
+      double distance = Geolocator.distanceBetween(
+        currentPosition.latitude,
+        currentPosition.longitude,
+        pointLatitude,
+        pointLongitude,
+      );
+      distances.add(distance);
+    }
+    return distances;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(pointList['name']),
+        title: Text(widget.pointList['name']),
+        actions: [
+          IconButton(
+            icon: Stack(
+              alignment: Alignment.center,
+              children: [
+                Icon(
+                  Icons.favorite,
+                  color: Colors.black, // 테두리 색상
+                  size: 30.0,
+                ),
+                Icon(
+                  isFavorited ? Icons.favorite : Icons.favorite_border,
+                  color: isFavorited ? Colors.red : Colors.white,
+                  size: 24.0,
+                ),
+              ],
+            ),
+            onPressed: () {
+              setState(() {
+                isFavorited = !isFavorited;
+              });
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -77,31 +116,20 @@ class PointDetailsScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: pointList['points'].length,
-                itemBuilder: (context, index) {
-                  final point = pointList['points'][index];
-                  return FutureBuilder<double>(
-                    future: _calculateDistance(point),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Card(
-                          margin: EdgeInsets.symmetric(vertical: 8.0),
-                          child: ListTile(
-                            title: Text(point['name']),
-                            subtitle: Text('Calculating distance...'),
-                          ),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Card(
-                          margin: EdgeInsets.symmetric(vertical: 8.0),
-                          child: ListTile(
-                            title: Text(point['name']),
-                            subtitle: Text('Error calculating distance'),
-                          ),
-                        );
-                      } else {
-                        double distance = snapshot.data!;
+              child: FutureBuilder<List<double>>(
+                future: distancesFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error calculating distances'));
+                  } else {
+                    List<double> distances = snapshot.data!;
+                    return ListView.builder(
+                      itemCount: widget.pointList['points'].length,
+                      itemBuilder: (context, index) {
+                        final point = widget.pointList['points'][index];
+                        double distance = distances[index];
                         return Card(
                           margin: EdgeInsets.symmetric(vertical: 8.0),
                           child: ListTile(
@@ -116,9 +144,9 @@ class PointDetailsScreen extends StatelessWidget {
                             onTap: () => navigateToPointDetails(context, point),
                           ),
                         );
-                      }
-                    },
-                  );
+                      },
+                    );
+                  }
                 },
               ),
             ),
@@ -134,10 +162,24 @@ class PointDetailsScreen extends StatelessWidget {
   }
 }
 
-class PointDetail extends StatelessWidget {
+class PointDetail extends StatefulWidget {
   final Map<String, dynamic> point;
 
   const PointDetail({Key? key, required this.point}) : super(key: key);
+
+  @override
+  _PointDetailState createState() => _PointDetailState();
+}
+
+class _PointDetailState extends State<PointDetail> {
+  bool isFavorited = false;
+  late Future<double> distanceFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    distanceFuture = _calculateDistance();
+  }
 
   Future<Position> _getCurrentLocation() async {
     bool serviceEnabled;
@@ -165,8 +207,8 @@ class PointDetail extends StatelessWidget {
 
   Future<double> _calculateDistance() async {
     Position currentPosition = await _getCurrentLocation();
-    double pointLatitude = point['location']['coordinates'][0];
-    double pointLongitude = point['location']['coordinates'][1];
+    double pointLatitude = widget.point['location']['coordinates'][0];
+    double pointLongitude = widget.point['location']['coordinates'][1];
 
     return Geolocator.distanceBetween(
       currentPosition.latitude,
@@ -180,7 +222,7 @@ class PointDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(point['name']),
+        title: Text(widget.point['name']),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -201,11 +243,11 @@ class PointDetail extends StatelessWidget {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 16.0),
-                  Text('Name: ${point['name']}'),
+                  Text('Name: ${widget.point['name']}'),
                   SizedBox(height: 8.0),
-                  Text('Location: [${point['location']['coordinates'].join(', ')}]'),
+                  Text('Location: [${widget.point['location']['coordinates'].join(', ')}]'),
                   SizedBox(height: 8.0),
-                  Text('ID: ${point['_id']}'),
+                  Text('ID: ${widget.point['_id']}'),
                   SizedBox(height: 16.0),
                   Text(
                     'Current Location:',
@@ -216,7 +258,7 @@ class PointDetail extends StatelessWidget {
                   Text('Longitude: ${currentPosition.longitude}'),
                   SizedBox(height: 16.0),
                   FutureBuilder<double>(
-                    future: _calculateDistance(),
+                    future: distanceFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Text('Calculating distance...');
