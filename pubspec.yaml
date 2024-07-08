@@ -89,6 +89,8 @@ flutter:
     - asset/background.png
     - asset/logo_green.png
     - asset/logo_pink.png
+    - asset/splash_logo.png
+    - asset/cat.png
     
   #   - images/a_dot_ham.jpeg
 

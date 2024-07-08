@@ -268,12 +268,12 @@ class _SampleScreenState extends State<SampleScreen> {
               : Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(height: 100), // 상단 여백 추가
+                    SizedBox(height: 130), // 상단 여백 추가
                     Text(
                       'Login',
                       style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.normal,
+                        fontSize: 35,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     Expanded(
@@ -281,13 +281,13 @@ class _SampleScreenState extends State<SampleScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            'asset/leaf.png',
-                            width: 150, // 이미지 크기 조절 (필요에 따라 조정)
-                            height: 150,
+                            'asset/cat.png',
+                            width: 200, // 이미지 크기 조절 (필요에 따라 조정)
+                            height: 200,
                           ),
-                          SizedBox(height: 50), // 로그인 버튼과 이미지 사이 간격
+                          SizedBox(height: 30), // 로그인 버튼과 이미지 사이 간격
                           _loginButton('login', signInWithGoogle),
-                          SizedBox(height: 60), 
+                        SizedBox(height: 100), 
                         ],
                       ),
                     ),
