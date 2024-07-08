@@ -14,6 +14,8 @@ class Tab1Screen extends StatefulWidget {
 
 class _Tab1ScreenState extends State<Tab1Screen> {
   List<Map<String, dynamic>> pointLists = [];
+  List<Map<String, dynamic>> filteredPointLists = [];
+  TextEditingController _searchController = TextEditingController();
 
   Future<void> getPointsLists() async {
     String url = baseUrl;
@@ -25,6 +27,7 @@ class _Tab1ScreenState extends State<Tab1Screen> {
         final data = jsonDecode(response.body) as List;
         setState(() {
           pointLists = data.map((item) => Map<String, dynamic>.from(item)).toList();
+          filteredPointLists = pointLists;
         });
       } else {
         print('Response not ok with url: $url, status: ${response.statusCode}, statusText: ${response.reasonPhrase}');
@@ -39,6 +42,17 @@ class _Tab1ScreenState extends State<Tab1Screen> {
   void initState() {
     super.initState();
     getPointsLists();
+    _searchController.addListener(_filterPoints);
+  }
+
+  void _filterPoints() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      filteredPointLists = pointLists.where((point) {
+        final name = point['name'].toLowerCase();
+        return name.contains(query);
+      }).toList();
+    });
   }
 
   void navigateToDetails(Map<String, dynamic> pointList) {
@@ -51,27 +65,58 @@ class _Tab1ScreenState extends State<Tab1Screen> {
   }
 
   @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Point Lists'),
       ),
-      body: Center(
-        child: pointLists.isEmpty
-            ? CircularProgressIndicator()
-            : ListView.builder(
-          itemCount: pointLists.length,
-          itemBuilder: (context, index) {
-            return Card(
-              margin: EdgeInsets.all(10),
-              child: ListTile(
-                title: Text(pointLists[index]['name']),
-                subtitle: Text('Points: ${pointLists[index]['points'].length}'),
-                onTap: () => navigateToDetails(pointLists[index]),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Search...',
+                prefixIcon: Icon(Icons.search, color: Color(0xFFA8DF8E)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Color(0xFFA8DF8E)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Color(0xFFA8DF8E)),
+                ),
+                contentPadding: EdgeInsets.symmetric(vertical: 10.0),
               ),
-            );
-          },
-        ),
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: filteredPointLists.isEmpty
+                  ? CircularProgressIndicator()
+                  : ListView.builder(
+                itemCount: filteredPointLists.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    margin: EdgeInsets.all(10),
+                    child: ListTile(
+                      title: Text(filteredPointLists[index]['name']),
+                      subtitle: Text('Points: ${filteredPointLists[index]['points'].length}'),
+                      onTap: () => navigateToDetails(filteredPointLists[index]),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
