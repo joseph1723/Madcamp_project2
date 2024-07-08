@@ -50,8 +50,8 @@ class PointDetailsScreen extends StatelessWidget {
 
   Future<double> _calculateDistance(Map<String, dynamic> point) async {
     Position currentPosition = await _getCurrentLocation();
-    double pointLatitude = point['location']['coordinates'][1];
-    double pointLongitude = point['location']['coordinates'][0];
+    double pointLatitude = point['location']['coordinates'][0];
+    double pointLongitude = point['location']['coordinates'][1];
 
     return Geolocator.distanceBetween(
       currentPosition.latitude,
@@ -165,8 +165,8 @@ class PointDetail extends StatelessWidget {
 
   Future<double> _calculateDistance() async {
     Position currentPosition = await _getCurrentLocation();
-    double pointLatitude = point['location']['coordinates'][1];
-    double pointLongitude = point['location']['coordinates'][0];
+    double pointLatitude = point['location']['coordinates'][0];
+    double pointLongitude = point['location']['coordinates'][1];
 
     return Geolocator.distanceBetween(
       currentPosition.latitude,

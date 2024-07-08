@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:goggle_login/user_my_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:goggle_login/login_platform.dart';
@@ -7,8 +8,10 @@ import 'package:goggle_login/point_list_provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'point_list.dart'; // tab1 스크린을 정의한 파일을 import합니다.
+import 'user_model.dart';
 import 'google_map_screen.dart'; // google_map_screen을 import합니다.
 import 'theme_screen.dart';
+import 'user_my_page.dart';
 
 class SampleScreen extends StatefulWidget {
   const SampleScreen({super.key});
@@ -23,19 +26,30 @@ class _SampleScreenState extends State<SampleScreen> {
 
   void signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
+    _currentUser = googleUser;
     if (googleUser != null) {
       //어디에 띄워?
       print('name = ${googleUser.displayName}');
       print('email = ${googleUser.email}');
       print('id = ${googleUser.id}');
 
-      final String token = googleUser.email; // 예시로 email을 token으로 사용
 
       // 토큰을 이용하여 id를 가져오는 함수 호출
-      await getIdByToken(token);
       // Get the authentication object
+
+
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+
+      final String token = googleUser.email; // 예시로 email을 token으로 사용
+
+      final userId = await getIdByToken(token, googleUser.displayName??'Noname');
+
+      print("This is output userID: ${userId}");
+      if (userId != null) {
+        Provider.of<UserModel>(context, listen: false).setUser(googleUser, userId);
+      }
+
 
       // Print the access token
       print('Access token = ${googleAuth.accessToken}');
@@ -48,7 +62,7 @@ class _SampleScreenState extends State<SampleScreen> {
     }
     }
   }
-  Future<void> getIdByToken(String token) async {
+  Future<String> getIdByToken(String token, String name) async {
     const String baseUrl = 'http://172.10.7.128:80'; // 서버의 기본 URL
     final String url = '$baseUrl/tokenstoid/$token';
 
@@ -59,29 +73,37 @@ class _SampleScreenState extends State<SampleScreen> {
         final data = jsonDecode(response.body);
         var userId = "";
         if(data == null){
-          userId = await tokentoid(token);
+          userId = await tokentoid(token, name);
         }
         else {
           userId = data['user_id'] as String;
         }
         if (userId != null) {
           print('Returned id: $userId');
+          return (userId);
           // 여기에서 id를 활용하여 추가적인 작업을 수행할 수 있습니다.
         } else {
           print('User id not found.');
+
+          throw Exception('Failed to find user id');
         }
       } else {
         print('Failed to get user id. Status code: ${response.statusCode}');
+
+        throw Exception('Failed to get user id');
       }
     } catch (e) {
       print('Error fetching user id: $e');
+
+      throw Exception('Error fetching user id');
     }
   }
 
-  Future<String> tokentoid(String token) async {
+  Future<String> tokentoid(String token, String name) async {
     const String url = 'http://172.10.7.128:80/tokenstoid'; // 포인트를 추가할 엔드포인트 URL
 
     try {
+      final user_id = await createUserLogin(name: name, email: token, id: token.split('@')[0], desc: '너의 산책은', phoneNumber: '0000000000');
       // 포인트 리스트 생성하기
       final response = await http.post(
         Uri.parse(url),
@@ -90,14 +112,14 @@ class _SampleScreenState extends State<SampleScreen> {
         },
         body: jsonEncode(<String, String>{
           'token': token,
-          'user_id': token.split('@gmail')[0],
+          'user_id': user_id,
         }),
       );
 
       if (response.statusCode == 201) {
         var result = jsonDecode(response.body);
         print('Token added successfully');
-        return(token.split('@gmail')[0]);
+        return(user_id);
       } else {
         print('Failed to add token. Status code: ${response.statusCode}');
         throw Exception('Failed to add user id');
@@ -107,7 +129,44 @@ class _SampleScreenState extends State<SampleScreen> {
       throw Exception('Failed to add user id');
     }
   }
+  Future<String> createUserLogin({
+    required String name,
+    required String email,
+    required String id,
+    required String desc,
+    required String phoneNumber,
+}) async{
+  const String url = 'http://172.10.7.128:80/userslogin';
 
+  final userData = {
+    'name': name,
+    'user_id': id,
+    'desc': desc,
+    'phoneNumber': phoneNumber,
+  };
+
+  try {
+  final response = await http.post(
+  Uri.parse(url),
+  headers: {
+  'Content-Type': 'application/json',
+  },
+  body: jsonEncode(userData),
+  );
+
+  if (response.statusCode != 201) {
+  print("url is $url");
+  throw Exception('HTTP error! Status: ${response.statusCode}');
+  }
+
+  final data = jsonDecode(response.body);
+  print('Created user login: $data');
+  return data['user_id'] ?? 'null';
+  } catch (error) {
+  print('Error creating user login: $error');
+  throw Exception('Error creating user login');
+  }
+}
   void signOut() async {
     switch (_loginPlatform) {
       case LoginPlatform.google:
@@ -139,6 +198,15 @@ class _SampleScreenState extends State<SampleScreen> {
     );
   }
 
+  void navigateToMyProfileScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyProfilePage(), // Replace MyProfilePage() with your actual widget instance
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,6 +226,10 @@ class _SampleScreenState extends State<SampleScreen> {
               icon: const Icon(Icons.logout),
               onPressed: signOut,
             ),
+          IconButton( // Add this IconButton for MyProfilePage
+            icon: const Icon(Icons.person), // Customize icon as per your requirement
+            onPressed: navigateToMyProfileScreen,
+          ),
         ],
       ),
       body: Center(
