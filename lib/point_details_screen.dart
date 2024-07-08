@@ -81,22 +81,53 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
   }
 
   void _showPopup(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Popup Title'),
-          content: Text('This is the popup content.'),
-          actions: [
-            TextButton(
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+        ),
+        titlePadding: EdgeInsets.only(top: 20, left: 20, right: 20),
+        contentPadding: EdgeInsets.symmetric(horizontal: 20),
+        actionsPadding: EdgeInsets.only(bottom: 20, right: 20),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('같이 걸어요 ><'),
+            IconButton(
+              icon: Icon(Icons.close),
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Close'),
             ),
           ],
+        ),
+        content: Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: _buildDummyList(),
+        ),
+      );
+    },
+  );
+}
+
+Widget _buildDummyList() {
+  final dummyData = List.generate(20, (index) {
+    return {'user_id': 'user_$index', 'phone_number': '123-456-789$index'};
+  });
+
+  return Scrollbar(
+    child: ListView.builder(
+      itemCount: dummyData.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(dummyData[index]['user_id']!),
+          subtitle: Text(dummyData[index]['phone_number']!),
         );
       },
-    );
-  }
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
