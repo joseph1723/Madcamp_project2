@@ -11,7 +11,6 @@ import 'point_list.dart'; // tab1 스크린을 정의한 파일을 import합니�
 import 'user_model.dart';
 import 'google_map_screen.dart'; // google_map_screen을 import합니다.
 import 'theme_screen.dart';
-import 'user_my_page.dart';
 
 class SampleScreen extends StatefulWidget {
   const SampleScreen({super.key});
@@ -216,22 +215,22 @@ class _SampleScreenState extends State<SampleScreen> {
         title: const Text('산책꼬?'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.tab), // 탭 아이콘 사용 가능
-            onPressed: navigateToTab1, // 탭1로 이동하는 함수 호출
+            icon: const Icon(Icons.place), 
+            onPressed: navigateToTab1, 
           ),
           IconButton(
             icon: const Icon(Icons.map), // 지도 아이콘 사용 가능
             onPressed: navigateToGoogleMapScreen, // Google 지도로 이동하는 함수 호출
+          ),
+          IconButton( // Add this IconButton for MyProfilePage
+            icon: const Icon(Icons.person), // Customize icon as per your requirement
+            onPressed: navigateToMyProfileScreen,
           ),
           if (_loginPlatform != LoginPlatform.none)
             IconButton(
               icon: const Icon(Icons.logout),
               onPressed: signOut,
             ),
-          IconButton( // Add this IconButton for MyProfilePage
-            icon: const Icon(Icons.person), // Customize icon as per your requirement
-            onPressed: navigateToMyProfileScreen,
-          ),
         ],
       ),
       body: Center(
@@ -240,7 +239,7 @@ class _SampleScreenState extends State<SampleScreen> {
               : Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(height: 40), // 상단 여백 추가
+                    SizedBox(height: 100), // 상단 여백 추가
                     Text(
                       'Login',
                       style: TextStyle(
@@ -252,13 +251,14 @@ class _SampleScreenState extends State<SampleScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _loginButton('login', signInWithGoogle),
-                          SizedBox(height: 50), // 로그인 버튼과 이미지 사이 간격
                           Image.asset(
                             'asset/leaf.png',
                             width: 150, // 이미지 크기 조절 (필요에 따라 조정)
                             height: 150,
                           ),
+                          SizedBox(height: 50), // 로그인 버튼과 이미지 사이 간격
+                          _loginButton('login', signInWithGoogle),
+                          SizedBox(height: 60), 
                         ],
                       ),
                     ),
@@ -296,70 +296,67 @@ class _SampleScreenState extends State<SampleScreen> {
     );
   }
   
-  Widget _mainContent(BuildContext context) {
+ Widget _mainContent(BuildContext context) {
+  final pointListProvider = Provider.of<PointListProvider>(context);
+  final pointList = pointListProvider.pointList;
 
-    final pointListProvider = Provider.of<PointListProvider>(context);
-    final pointList = pointListProvider.pointList;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: _currentUser?.displayName ?? "User",
-                style: const TextStyle(
-                  color: Color(0xFFA8DF8E),
-                  fontSize: 20,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w400,
-                  height: 0,
-                ),
-              ),
-              const TextSpan(
-                text: '님 안녕하세요!\n오늘도 즐거운 산책을 시작해볼까요?',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w400,
-                  height: 0,
-                ),
-              ),
-            ],
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 20.0), // 왼쪽 끝에 패딩 추가
+            child: Image.asset('asset/weather1.png', height: 50),
           ),
+          Spacer(),
+          Image.asset('asset/weather2.png', height: 50),
+          Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(right: 20.0), // 오른쪽 끝에 패딩 추가
+            child: Image.asset('asset/sun.png', height: 50),
+          ),
+          SizedBox(height: 5),
+        ],
+    ),
+      RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: _currentUser?.displayName ?? "User",
+              style: const TextStyle(
+                color: Color(0xFFA8DF8E),
+                fontSize: 24,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.bold,
+                height: 1.5,
+              ),
+            ),
+            const TextSpan(
+              text: '님 안녕하세요!\n오늘도 즐거운 산책을 시작해볼까요?',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 22,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+                height: 1.5,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 40),
-        pointList != null ? _buildPointList(pointList) : _buildThemeBox(),
-        // const Text(
-        //   '오늘의 추천 테마',
-        //   style: TextStyle(fontSize: 16),
-        // ),
-        // const SizedBox(height: 20),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //   children: [
-        //     _themeBox('Theme 1', () {
-        //       // Navigate to the new screen for Theme 1
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //             builder: (context) => const ThemeScreen(theme: 'Theme 1')),
-        //       );
-        //     }),
-        //     _themeBox('Theme 2', () {
-        //       // Navigate to the new screen for Theme 2
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //             builder: (context) => const ThemeScreen(theme: 'Theme 2')),
-        //       );
-        //     }),
-        //   ],
-        // ),
-      ],
-    );
-  }
+      ),
+      const SizedBox(height: 5),
+      Image.asset(
+        'asset/장식.png',
+        height: 100,
+      ),
+      const SizedBox(height: 30),
+      pointList != null ? _buildPointList(pointList) : _buildThemeBox(),
+    ],
+  );
+}
 
   Widget _buildPointList(Map<String, dynamic> pointList) {
   return Column(
@@ -422,9 +419,9 @@ Widget _buildThemeBox() {
       children: [
         Text(
           '오늘의 추천 테마',
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 20),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 30),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [

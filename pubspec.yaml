@@ -72,6 +72,10 @@ flutter:
     - asset/img4.png
     - asset/img5.png
     - asset/leaf.png
+    - asset/장식.png
+    - asset/weather1.png
+    - asset/weather2.png
+    - asset/sun.png
     
   #   - images/a_dot_ham.jpeg
 
