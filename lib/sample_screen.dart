@@ -232,27 +232,36 @@ class _SampleScreenState extends State<SampleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('산책꼬?'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.place), 
-            onPressed: navigateToTab1, 
+        title: Row(
+        children: [
+          Image.asset(
+            'asset/logo_green.png', // 로고 이미지 파일의 경로
+            height: 40, // 로고의 높이
           ),
-          IconButton(
-            icon: const Icon(Icons.map), // 지도 아이콘 사용 가능
-            onPressed: navigateToGoogleMapScreen, // Google 지도로 이동하는 함수 호출
-          ),
-          IconButton( // Add this IconButton for MyProfilePage
-            icon: const Icon(Icons.person), // Customize icon as per your requirement
-            onPressed: navigateToMyProfileScreen,
-          ),
-          if (_loginPlatform != LoginPlatform.none)
-            IconButton(
-              icon: const Icon(Icons.logout),
-              onPressed: signOut,
-            ),
+          SizedBox(width: 5), // 로고와 텍스트 사이의 간격
+          const Text('산책꼬?'),
         ],
       ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.place),
+          onPressed: navigateToTab1,
+        ),
+        IconButton(
+          icon: const Icon(Icons.map),
+          onPressed: navigateToGoogleMapScreen,
+        ),
+        IconButton(
+          icon: const Icon(Icons.person),
+          onPressed: navigateToMyProfileScreen,
+        ),
+        if (_loginPlatform != LoginPlatform.none)
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: signOut,
+          ),
+      ],
+    ),
       body: Center(
           child: _loginPlatform != LoginPlatform.none
               ? _mainContent(context)
@@ -484,9 +493,19 @@ Widget _pointBox(Map<String, dynamic> point) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 149,
-        height: 187,
-        color: Colors.grey,
+        width: 190,
+        height: 220,
+        decoration: BoxDecoration(
+        color: Colors.white, // 박스의 배경색
+        borderRadius: BorderRadius.circular(15), // 모서리 둥글게 만들기
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 5,
+            offset: Offset(2, 2),
+          ),
+        ],
+      ),
         child: Center(
           child: Text(
             title,
