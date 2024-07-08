@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'point_list_provider.dart'; // PointListProvider 파일을 import합니다.
 import 'sample_screen.dart'; // SampleScreen을 정의한 파일을 import합니다.
+import 'user_model.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => PointListProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => UserModel()),
+        ChangeNotifierProvider(create: (context) => PointListProvider()),
+      ],
       child: MyApp(),
     ),
   );
