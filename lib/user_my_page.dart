@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'user_model.dart';
 import 'package:http/http.dart' as http;
-import 'edit_profile_page.dart';
+import 'edit_profile_page.dart'; // 수정 화면을 import
 
 class MyProfilePage extends StatefulWidget {
   const MyProfilePage({super.key});
@@ -17,6 +17,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
   late String _name;
   late String _desc;
   late String _phoneNumber;
+  late List<String> _complt_thema;
 
   @override
   void initState() {
@@ -24,6 +25,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     _name = '';
     _desc = '';
     _phoneNumber = '';
+    _complt_thema = []; // 초기화 필요
     // 사용자 로그인 정보 초기 로딩
     loadUserLogin();
   }
@@ -36,6 +38,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         _name = data['name'] ?? '이름 없음';
         _desc = data['desc'] ?? '자기소개 없음';
         _phoneNumber = data['phonenumber'] ?? '';
+        _complt_thema = data['complt_thema']?.cast<String>() ?? []; // String 리스트로 변환
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -117,12 +120,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
   @override
   Widget build(BuildContext context) {
     final userModelProvider = Provider.of<UserModel>(context);
-    final currentUser = userModelProvider.currentUser;
-    final email = currentUser?.email;
+    final current_user = userModelProvider.currentUser;
+    final photoUrl = current_user?.photoUrl;
+    final email = current_user?.email;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${currentUser?.displayName} 님의 프로필'),
+        title: Text('${current_user?.displayName} 님의 프로필'),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -133,7 +137,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
               children: <Widget>[
                 CircleAvatar(
                   radius: 100,
-                  backgroundImage: AssetImage('asset/img1.png'), // 로컬 이미지 경로
+                  backgroundImage: AssetImage('asset/교수회관으로 가는 길.png'), // 로컬 이미지 경로
                 ),
                 const SizedBox(height: 30),
                 Card(
@@ -224,7 +228,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start, // 왼쪽 정렬
                     children: <Widget>[
-                      BadgeBox(imagePath: 'asset/img1.png', description: '첫 번째 뱃지'),
+                      BadgeBox(imagePath: 'asset/교수회관으로 가는 길.png', description: '몰입캠프에 참여한 당신! 슬슬 맛보단 거리가 중요하죠?'),
                       BadgeBox(imagePath: 'asset/img2.png', description: '첫 번째 뱃지'),
                       BadgeBox(imagePath: 'asset/img3.png', description: '첫 번째 뱃지'),
                       BadgeBox(imagePath: 'asset/img4.png', description: '첫 번째 뱃지'),

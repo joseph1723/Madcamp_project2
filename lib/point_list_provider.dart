@@ -9,4 +9,9 @@ class PointListProvider extends ChangeNotifier {
     _pointList = pointList;
     notifyListeners();
   }
+
+  void clearPointList(){
+    _pointList = null;
+    notifyListeners();
+  }
 }
