@@ -133,7 +133,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
           const SizedBox(height: 30),
           const Text(
             '내가 획득한 뱃지',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           SingleChildScrollView(

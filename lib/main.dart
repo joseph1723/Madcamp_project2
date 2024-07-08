@@ -25,9 +25,10 @@ class MyApp extends StatelessWidget {
       title: 'Social Login App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: '교보'
       ),
       debugShowCheckedModeBanner: false,
-      home: const SampleScreen(), // SampleScreen을 초기 화면으로 설정합니다.
+      home: const SampleScreen(),
     );
   }
 }

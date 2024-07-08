@@ -329,7 +329,7 @@ class _SampleScreenState extends State<SampleScreen> {
               style: const TextStyle(
                 color: Color(0xFFA8DF8E),
                 fontSize: 24,
-                fontFamily: 'Inter',
+                fontFamily: '교보',
                 fontWeight: FontWeight.bold,
                 height: 1.5,
               ),
@@ -339,7 +339,7 @@ class _SampleScreenState extends State<SampleScreen> {
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 22,
-                fontFamily: 'Inter',
+                fontFamily: '교보',
                 fontWeight: FontWeight.w400,
                 height: 1.5,
               ),
@@ -419,7 +419,7 @@ Widget _buildThemeBox() {
       children: [
         Text(
           '오늘의 추천 테마',
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 22),
         ),
         SizedBox(height: 30),
         Row(
