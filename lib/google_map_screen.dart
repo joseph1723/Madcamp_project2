@@ -194,6 +194,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
   void _moveCameraToCurrentLocation() {
   if (_currentPosition != null) {
+    print('Current position: Latitude = ${_currentPosition!.latitude}, Longitude = ${_currentPosition!.longitude}');
     _controller?.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
