@@ -167,6 +167,8 @@ class _SampleScreenState extends State<SampleScreen> {
   }
 }
   void signOut() async {
+    Provider.of<PointListProvider>(context, listen: false).clearPointList();
+    Provider.of<UserModel>(context, listen: false).clearUser();
     switch (_loginPlatform) {
       case LoginPlatform.google:
         await GoogleSignIn().signOut();

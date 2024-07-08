@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'user_model.dart';
 import 'package:http/http.dart' as http;
-import 'edit_profile_page.dart';
+import 'edit_profile_page.dart'; // 수정 화면을 import
 
 class MyProfilePage extends StatefulWidget {
   const MyProfilePage({super.key});
@@ -17,6 +17,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
   late String _name;
   late String _desc;
   late String _phoneNumber;
+  late List<String> _complt_thema;
 
   @override
   void initState() {
@@ -24,6 +25,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     _name = '';
     _desc = '';
     _phoneNumber = '';
+    _complt_thema = []; // 초기화 필요
     // 사용자 로그인 정보 초기 로딩
     loadUserLogin();
   }
@@ -36,6 +38,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         _name = data['name'] ?? '이름 없음';
         _desc = data['desc'] ?? '자기소개 없음';
         _phoneNumber = data['phonenumber'] ?? '';
+        _complt_thema = data['complt_thema']?.cast<String>() ?? []; // String 리스트로 변환
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -117,130 +120,136 @@ class _MyProfilePageState extends State<MyProfilePage> {
   @override
   Widget build(BuildContext context) {
     final userModelProvider = Provider.of<UserModel>(context);
-    final currentUser = userModelProvider.currentUser;
-    final email = currentUser?.email;
+    final current_user = userModelProvider.currentUser;
+    final photoUrl = current_user?.photoUrl;
+    final email = current_user?.email;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${currentUser?.displayName} 님의 프로필'),
+        title: Text('${current_user?.displayName} 님의 프로필'),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center, // 텍스트 중앙 정렬
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 100,
-                  backgroundImage: AssetImage('asset/img1.png'), // 로컬 이미지 경로
-                ),
-                const SizedBox(height: 30),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start, // 텍스트 시작 정렬
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(
-                            'Name: $_name',
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(
-                            'Email: $email',
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(
-                            '전화번호: $_phoneNumber',
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(
-                            '자기소개: $_desc',
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                        ),
-                      ],
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 100,
+                      backgroundImage: AssetImage('asset/img2.png'),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 30),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFA8DF8E), // 버튼 색상 변경
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditProfilePage(
-                          initialName: _name,
-                          initialDesc: _desc,
-                          initialPhoneNumber: _phoneNumber,
-                          onSave: (String name, String desc, String phoneNumber) async {
-                            try {
-                              await updateUserLogin(userModelProvider.userId!, name, desc, phoneNumber);
-                              // 업데이트 성공 후 작업 (예: 성공 메시지 표시)
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('사용자 정보가 성공적으로 업데이트되었습니다.'),
-                                  duration: Duration(seconds: 3),
-                                ),
-                              );
-                            } catch (e) {
-                              // 업데이트 실패 후 작업 (예: 에러 메시지 표시)
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('사용자 정보 업데이트에 실패했습니다. $e'),
-                                  duration: const Duration(seconds: 3),
-                                ),
-                              );
-                            }
-                          },
+                    const SizedBox(height: 30),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Text(
+                                'Name: $_name',
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Text(
+                                'Email: $email',
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Text(
+                                '전화번호: $_phoneNumber',
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Text(
+                                '자기소개: $_desc',
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    );
-                  },
-                  child: const Text('프로필 수정'),
+                    ),
+                    const SizedBox(height: 30),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFA8DF8E),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditProfilePage(
+                              initialName: _name,
+                              initialDesc: _desc,
+                              initialPhoneNumber: _phoneNumber,
+                              onSave: (String name, String desc, String phoneNumber) async {
+                                try {
+                                  await updateUserLogin(userModelProvider.userId!, name, desc, phoneNumber);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('사용자 정보가 성공적으로 업데이트되었습니다.'),
+                                      duration: Duration(seconds: 3),
+                                    ),
+                                  );
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('사용자 정보 업데이트에 실패했습니다. $e'),
+                                      duration: const Duration(seconds: 3),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text('프로필 수정'),
+                    ),
+                    const SizedBox(height: 30),
+                    const Text(
+                      '내가 획득한 뱃지',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 16),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: _complt_thema.map((theme) {
+                          String imagePath = 'asset/$theme.png';
+                          String description = theme;
+
+                          return BadgeBox(
+                            imagePath: imagePath,
+                            description: description,
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 30),
-                const Text(
-                  '내가 획득한 뱃지',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start, // 왼쪽 정렬
-                    children: <Widget>[
-                      BadgeBox(imagePath: 'asset/img1.png', description: '첫 번째 뱃지'),
-                      BadgeBox(imagePath: 'asset/img2.png', description: '첫 번째 뱃지'),
-                      BadgeBox(imagePath: 'asset/img3.png', description: '첫 번째 뱃지'),
-                      BadgeBox(imagePath: 'asset/img4.png', description: '첫 번째 뱃지'),
-                      BadgeBox(imagePath: 'asset/img5.png', description: '첫 번째 뱃지'),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 }
-
 class BadgeBox extends StatelessWidget {
   final String imagePath;
   final String description; // 새로 추가된 설명 파라미터
