@@ -344,8 +344,8 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Points:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              '어디 걸을까? :D',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Expanded(
               child: FutureBuilder<List<double>>(
@@ -371,15 +371,15 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
                                 color: Color(0xFFA8DF8E), // 테두리 색상 설정
                                 width: 2, // 테두리 두께 설정
                               ),
-                              borderRadius: BorderRadius.circular(4), // Card의 기본 borderRadius 설정
+                              borderRadius: BorderRadius.circular(10), // Card의 기본 borderRadius 설정
                             ),
                             child: ListTile(
                               title: Text(point['name']),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Distance: ${distance.toStringAsFixed(2)} meters'),
-                                  Text('ID: ${point['_id']}'),
+                                  Text('떨어진 거리: ${distance.toStringAsFixed(2)} meters'),
+                                  Text('${widget.pointList['points'][index]['address']}'),
                                 ],
                               ),
                               onTap: () => navigateToPointDetails(context, point),
@@ -493,37 +493,21 @@ class _PointDetailState extends State<PointDetail> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Point Details:',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 16.0),
-                  Text('Name: ${widget.point['name']}'),
+                  Text('${widget.point['name']}'),
                   SizedBox(height: 8.0),
-                  Text(
-                      'Location: [${widget.point['location']['coordinates'].join(', ')}]'),
-                  SizedBox(height: 8.0),
-                  Text('ID: ${widget.point['_id']}'),
-                  SizedBox(height: 16.0),
-                  Text(
-                    'Current Location:',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8.0),
-                  Text('Latitude: ${currentPosition.latitude}'),
-                  Text('Longitude: ${currentPosition.longitude}'),
+                  Text('${widget.point['address']}'),
                   SizedBox(height: 16.0),
                   FutureBuilder<double>(
                     future: distanceFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text('Calculating distance...');
+                        return Text('거리 계산 중...');
                       } else if (snapshot.hasError) {
                         return Text('Error calculating distance');
                       } else {
                         double distance = snapshot.data!;
                         return Text(
-                            'Distance to Point: ${distance.toStringAsFixed(2)} meters');
+                            '여기서부터 ${distance.toStringAsFixed(2)} meters 떨어짐');
                       }
                     },
                   ),

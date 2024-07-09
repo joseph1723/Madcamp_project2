@@ -130,7 +130,7 @@ class _Tab1ScreenState extends State<Tab1Screen> {
                           color: Color(0xFFA8DF8E), // 테두리 색상 설정
                           width: 2, // 테두리 두께 설정
                         ),
-                        borderRadius: BorderRadius.circular(5), // Card의 기본 borderRadius 설정
+                        borderRadius: BorderRadius.circular(10), // Card의 기본 borderRadius 설정
                       ),
                       child: ListTile(
                         title: Text(filteredPointLists[index]['name']),
