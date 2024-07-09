@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+
+
 
 class EditProfilePage extends StatefulWidget {
   final String initialName;
   final String initialDesc;
   final String initialPhoneNumber;
-  final Function(String, String, String) onSave;
+  final Function(String, String, String, String) onSave; // imagePath 추가
 
   EditProfilePage({
     required this.initialName,
@@ -21,6 +27,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late TextEditingController _nameController;
   late TextEditingController _descController;
   late TextEditingController _phoneNumberController;
+  String? _imagePath; // 선택된 이미지 파일 경로
 
   @override
   void initState() {
@@ -46,6 +53,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.dispose();
   }
 
+  Future<void> _getImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imagePath = pickedFile.path;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +75,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              // 이미지 선택 버튼 추가
+              ElevatedButton(
+                onPressed: _getImage,
+                child: Text('이미지 선택'),
+              ),
+              SizedBox(height: 16),
+              if (_imagePath != null) // 선택된 이미지가 있을 경우 미리보기 표시
+                Image.file(
+                  File(_imagePath!),
+                  height: 200,
+                ),
+              SizedBox(height: 16),
               TextField(
                 controller: _nameController,
                 decoration: InputDecoration(
@@ -85,10 +114,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
+                  // imagePath도 onSave 함수에 전달
+                  print("NEW IMAGE PATH IS $_imagePath");
                   widget.onSave(
                     _nameController.text,
                     _descController.text,
                     _phoneNumberController.text,
+                    _imagePath ?? '', // 이미지 경로가 없을 경우 빈 문자열 전달
                   );
                   Navigator.pop(context); // 수정 완료 후 이전 페이지로 이동
                 },
