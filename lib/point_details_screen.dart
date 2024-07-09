@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'dart:convert';
 import 'user_model.dart';
 import 'package:http/http.dart' as http;
+import 'user_my_page.dart';
 
 
 class PointDetailsScreen extends StatefulWidget {
@@ -262,12 +263,18 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
             child: ListView.builder(
               itemCount: likePeople.length,
               itemBuilder: (context, index) {
-                final item = likePeople[index];
-                if (item == null) {
-                  return SizedBox(); // 또는 다른 기본 위젯을 반환하여 처리
-                }
+                final person = likePeople[index];
                 return ListTile(
-                  title: Text(item.toString()), // toString()을 사용하여 문자열로 변환
+                  title: Text(person),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            OtherUserProfilePage(userId: person),
+                      ),
+                    );
+                  },
                 );
               },
             ),
