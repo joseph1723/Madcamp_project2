@@ -132,6 +132,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          const SizedBox(height: 20),
           CircleAvatar(
             radius: 100,
             backgroundImage: AssetImage('asset/img4.png'),
@@ -176,54 +177,61 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
             ),
           ),
           if (widget.isEditable) ...[
-            const SizedBox(height: 30),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFA8DF8E),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditProfilePage(
-                      initialName: _name,
-                      initialDesc: _desc,
-                      initialPhoneNumber: _phoneNumber,
-                      onSave:
-                          (String name, String desc, String phoneNumber) async {
-                        try {
-                          await updateUserLogin(widget.userId, name,
-                              desc, phoneNumber);
-                          // 업데이트 성공 후 작업 (예: 성공 메시지 표시)
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('사용자 정보가 성공적으로 업데이트되었습니다.'),
-                              duration: Duration(seconds: 3),
-                            ),
-                          );
-                        } catch (e) {
-                          // 업데이트 실패 후 작업 (예: 에러 메시지 표시)
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('사용자 정보 업데이트에 실패했습니다. $e'),
-                              duration: const Duration(seconds: 3),
-                            ),
-                          );
-                        }
-                      },
-                    ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: 150, // 원하는 너비로 설정
+              height: 45, // 원하는 높이로 설정
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFA8DF8E),
+                  textStyle: const TextStyle( // 글꼴 스타일 설정
+                    fontSize: 18, 
+                    fontFamily: '교보',
                   ),
-                );
-              },
-              child: const Text('프로필 수정'),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditProfilePage(
+                        initialName: _name,
+                        initialDesc: _desc,
+                        initialPhoneNumber: _phoneNumber,
+                        onSave: (String name, String desc, String phoneNumber) async {
+                          try {
+                            await updateUserLogin(widget.userId, name, desc, phoneNumber);
+                            // 업데이트 성공 후 작업 (예: 성공 메시지 표시)
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('사용자 정보가 성공적으로 업데이트되었습니다.'),
+                                duration: Duration(seconds: 3),
+                              ),
+                            );
+                          } catch (e) {
+                            // 업데이트 실패 후 작업 (예: 에러 메시지 표시)
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('사용자 정보 업데이트에 실패했습니다. $e'),
+                                duration: const Duration(seconds: 3),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  );
+                },
+                child: const Text('프로필 수정'),
+              ),
             ),
           ],
+
           const SizedBox(height: 30),
           const Text(
             '내가 획득한 뱃지',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -239,6 +247,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
               }).toList(),
             ),
           ),
+          const SizedBox(height: 20),
         ],
       ),
     );
@@ -258,7 +267,7 @@ class BadgeBox extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 200,
+            width: 190,
             height: 200,
             decoration: BoxDecoration(
               border: Border.all(color: const Color(0xFFA8DF8E)),
@@ -270,7 +279,7 @@ class BadgeBox extends StatelessWidget {
           Text(
             description,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14),
+            style: const TextStyle(fontSize: 16),
           ),
         ],
       ),
