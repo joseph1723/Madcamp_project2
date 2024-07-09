@@ -234,6 +234,9 @@ class _SampleScreenState extends State<SampleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -241,14 +244,13 @@ class _SampleScreenState extends State<SampleScreen> {
           children: [
             Image.asset(
               'asset/logo_green.png', // 로고 이미지 파일의 경로
-              height: 40, // 로고의 높이
+              height: screenHeight * 0.05, // 로고의 높이 (화면 높이에 비례)
             ),
             SizedBox(width: 5), // 로고와 텍스트 사이의 간격
             const Text('산책꼬?'),
           ],
         ),
         backgroundColor: const Color(0xBEF7FF),
-        //elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.place),
@@ -278,15 +280,15 @@ class _SampleScreenState extends State<SampleScreen> {
         ),
         child: Center(
           child: _loginPlatform != LoginPlatform.none
-              ? _mainContent(context)
+              ? _mainContent(context, screenWidth, screenHeight)
               : Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(height: 130), // 상단 여백 추가
+                    SizedBox(height: screenHeight * 0.15), // 상단 여백 추가
                     Text(
                       'Login',
                       style: TextStyle(
-                        fontSize: 35,
+                        fontSize: screenHeight * 0.05,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -296,12 +298,13 @@ class _SampleScreenState extends State<SampleScreen> {
                         children: [
                           Image.asset(
                             'asset/logo_pink.png',
-                            width: 200, // 이미지 크기 조절 (필요에 따라 조정)
-                            height: 200,
+                            width: screenWidth * 0.5, // 이미지 크기 조절
+                            height: screenHeight * 0.25,
                           ),
-                          SizedBox(height: 50), // 로그인 버튼과 이미지 사이 간격
+                          SizedBox(
+                              height: screenHeight * 0.05), // 로그인 버튼과 이미지 사이 간격
                           _loginButton('login', signInWithGoogle),
-                          SizedBox(height: 100),
+                          SizedBox(height: screenHeight * 0.1),
                         ],
                       ),
                     ),
@@ -339,7 +342,8 @@ class _SampleScreenState extends State<SampleScreen> {
     );
   }
 
-  Widget _mainContent(BuildContext context) {
+  Widget _mainContent(
+      BuildContext context, double screenWidth, double screenHeight) {
     final pointListProvider = Provider.of<PointListProvider>(context);
     final pointList = pointListProvider.pointList;
 
@@ -349,29 +353,29 @@ class _SampleScreenState extends State<SampleScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('asset/sun.png', height: 50),
+            Image.asset('asset/sun.png', height: screenHeight * 0.07),
           ],
         ),
-        SizedBox(height: 22),
+        SizedBox(height: screenHeight * 0.03),
         RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
             children: [
               TextSpan(
                 text: _currentUser?.displayName ?? "User",
-                style: const TextStyle(
+                style: TextStyle(
                   color: Color(0xFFA8DF8E),
-                  fontSize: 24,
+                  fontSize: screenHeight * 0.03,
                   fontFamily: '교보',
                   fontWeight: FontWeight.bold,
                   height: 1.5,
                 ),
               ),
-              const TextSpan(
+              TextSpan(
                 text: '님 안녕하세요!\n오늘도 즐거운 산책을 시작해볼까요?',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 22,
+                  fontSize: screenHeight * 0.025,
                   fontFamily: '교보',
                   fontWeight: FontWeight.w400,
                   height: 1.5,
@@ -380,13 +384,15 @@ class _SampleScreenState extends State<SampleScreen> {
             ],
           ),
         ),
-        const SizedBox(height: 5),
+        SizedBox(height: screenHeight * 0.005),
         Image.asset(
           'asset/장식.png',
-          height: 100,
+          height: screenHeight * 0.12,
         ),
-        const SizedBox(height: 30),
-        pointList != null ? _buildPointList(pointList) : _buildThemeBox(),
+        SizedBox(height: screenHeight * 0.04),
+        pointList != null
+            ? _buildPointList(pointList)
+            : _buildThemeBox(screenWidth, screenHeight),
       ],
     );
   }
@@ -463,7 +469,7 @@ class _SampleScreenState extends State<SampleScreen> {
     );
   }
 
-  Widget _buildThemeBox() {
+  Widget _buildThemeBox(double screenWidth, double screenHeight) {
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: getPointsLists(),
       builder: (context, snapshot) {
@@ -484,23 +490,33 @@ class _SampleScreenState extends State<SampleScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   if (pointLists.length > 0)
-                    _themeBox('${pointLists[0]['name']}', () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
+                    Flexible(
+                      child: _themeBox(
+                          '${pointLists[0]['name']}', screenWidth, screenHeight,
+                          () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
                             builder: (context) =>
-                                PointDetailsScreen(pointList: pointLists[0])),
-                      );
-                    }),
+                                PointDetailsScreen(pointList: pointLists[0]),
+                          ),
+                        );
+                      }),
+                    ),
                   if (pointLists.length > 1)
-                    _themeBox('${pointLists[1]['name']}', () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
+                    Flexible(
+                      child: _themeBox(
+                          '${pointLists[1]['name']}', screenWidth, screenHeight,
+                          () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
                             builder: (context) =>
-                                PointDetailsScreen(pointList: pointLists[1])),
-                      );
-                    }),
+                                PointDetailsScreen(pointList: pointLists[1]),
+                          ),
+                        );
+                      }),
+                    ),
                 ],
               ),
             ],
@@ -512,12 +528,13 @@ class _SampleScreenState extends State<SampleScreen> {
     );
   }
 
-  Widget _themeBox(String title, VoidCallback onTap) {
+  Widget _themeBox(String title, double screenWidth, double screenHeight,
+      VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 190,
-        height: 220,
+        width: screenWidth * 0.45, // 화면 너비의 45%를 사용
+        height: screenHeight * 0.25, // 화면 높이의 25%를 사용
         decoration: BoxDecoration(
           color: Colors.white, // 박스의 배경색
           borderRadius: BorderRadius.circular(15), // 모서리 둥글게 만들기
