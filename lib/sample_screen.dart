@@ -221,6 +221,7 @@ class _SampleScreenState extends State<SampleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Row(
           children: [
@@ -232,6 +233,8 @@ class _SampleScreenState extends State<SampleScreen> {
             const Text('산책꼬?'),
           ],
         ),
+        backgroundColor: const Color(0xBEF7FF),
+        //elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.place),
