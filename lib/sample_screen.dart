@@ -251,6 +251,7 @@ class _SampleScreenState extends State<SampleScreen> {
           ],
         ),
         backgroundColor: const Color(0xBEF7FF),
+        //elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.place),
@@ -450,24 +451,146 @@ class _SampleScreenState extends State<SampleScreen> {
           ],
         ),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                point['name'],
-                style: TextStyle(color: Colors.black),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+            Image.asset(
+            'asset/${point['name']}.png',
+              width: 100,
+              height: 100,
+            ),
+            SizedBox(height: 10), // 이미지와 텍스트 사이의 간격
+            Text(
+              point['name'],
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.black,
               ),
-              SizedBox(height: 8),
-              Text(
-                'ID: ${point['_id']}',
-                style: TextStyle(color: Colors.black, fontSize: 16),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
+      )
     );
   }
+
+  // Widget _buildThemeBox() {
+  //   return FutureBuilder<List<Map<String, dynamic>>>(
+  //     future: getPointsLists(),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return Center(child: CircularProgressIndicator());
+  //       } else if (snapshot.hasError) {
+  //         return Center(child: Text('Error: ${snapshot.error}'));
+  //       } else if (snapshot.hasData) {
+  //         List<Map<String, dynamic>> pointLists = snapshot.data!;
+  //         return Column(
+  //           children: [
+  //             Text(
+  //               '오늘의 추천 테마',
+  //               style: TextStyle(fontSize: 20),
+  //             ),
+  //             SizedBox(height: 30),
+  //             Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //               children: [
+  //                 if (pointLists.length > 0)
+  //                   _themeBox('${pointLists[0]['name']}', () {
+  //                     Navigator.push(
+  //                       context,
+  //                       MaterialPageRoute(
+  //                           builder: (context) =>
+  //                               PointDetailsScreen(pointList: pointLists[0])),
+  //                     );
+  //                   }),
+  //                 if (pointLists.length > 1)
+  //                   _themeBox('${pointLists[1]['name']}', () {
+  //                     Navigator.push(
+  //                       context,
+  //                       MaterialPageRoute(
+  //                           builder: (context) =>
+  //                               PointDetailsScreen(pointList: pointLists[1])),
+  //                     );
+  //                   }),
+  //               ],
+  //             ),
+  //           ],
+  //         );
+  //       } else {
+  //         return Center(child: Text('No data'));
+  //       }
+  //     },
+  //   );
+  // }
+  //
+  // Widget _themeBox(String title, VoidCallback onTap) {
+  //   return GestureDetector(
+  //     onTap: onTap,
+  //     child: Container(
+  //       width: 190,
+  //       height: 220,
+  //       decoration: BoxDecoration(
+  //         color: Colors.white, // 박스의 배경색
+  //         borderRadius: BorderRadius.circular(15), // 모서리 둥글게 만들기
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: Colors.black26,
+  //             blurRadius: 5,
+  //             offset: Offset(2, 2),
+  //           ),
+  //         ],
+  //       ),
+  //       child: Center(
+  //         child: Text(
+  //           title,
+  //           style: const TextStyle(
+  //             fontSize: 16,
+  //             color: Colors.black,
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  // Widget _themeBox(String title, VoidCallback onTap) {
+  //   return GestureDetector(
+  //     onTap: onTap,
+  //     child: Container(
+  //       width: 190,
+  //       height: 220,
+  //       decoration: BoxDecoration(
+  //         color: Colors.white, // 박스의 배경색
+  //         borderRadius: BorderRadius.circular(15), // 모서리 둥글게 만들기
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: Colors.black26,
+  //             blurRadius: 5,
+  //             offset: Offset(2, 2),
+  //           ),
+  //         ],
+  //       ),
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: [
+  //           Image.asset(
+  //             'asset/${title}_theme.png',
+  //             width: 100,
+  //             height: 100,
+  //           ),
+  //           SizedBox(height: 10), // 이미지와 텍스트 사이의 간격
+  //           Text(
+  //             title,
+  //             style: const TextStyle(
+  //               fontSize: 16,
+  //               color: Colors.black,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildThemeBox(double screenWidth, double screenHeight) {
     return FutureBuilder<List<Map<String, dynamic>>>(
@@ -546,15 +669,24 @@ class _SampleScreenState extends State<SampleScreen> {
             ),
           ],
         ),
-        child: Center(
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-            ),
+    child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'asset/${title}_theme.png',
+                width: 100,
+                height: 100,
+              ),
+              SizedBox(height: 10), // 이미지와 텍스트 사이의 간격
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+            ],
           ),
-        ),
       ),
     );
   }
