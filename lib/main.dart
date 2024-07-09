@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'point_list_provider.dart'; // PointListProvider 파일을 import합니다.
 import 'sample_screen.dart'; // SampleScreen을 정의한 파일을 import합니다.
 import 'user_model.dart';
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 
 void main() {
   runApp(

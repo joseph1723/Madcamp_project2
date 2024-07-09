@@ -41,6 +41,7 @@ dependencies:
   google_maps_flutter: ^2.2.0
   provider: ^5.0.0
   animated_splash_screen: ^1.0.1+2
+  url_launcher: ^6.0.20
   
 dev_dependencies:
   flutter_test:
@@ -52,14 +53,6 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
-  flutter_native_splash: ^2.4.1
-
-flutter_native_splash:
-  color: "#42a5f5"
-  image: asset/leaf.png
-  android: true
-  ios: true
-  web: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -109,11 +102,7 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: 온글잎 류뚱체
-      fonts:
-        - asset: asset/fonts/온글잎 류뚱체.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+    
     - family: 교보
       fonts:
         - asset: asset/fonts/교보.ttf

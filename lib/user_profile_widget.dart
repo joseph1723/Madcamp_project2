@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import 'edit_profile_page.dart';
 
 class UserProfileWidget extends StatefulWidget {
@@ -122,6 +123,24 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
     }
   }
 
+  void _sendMessage() async {
+  final uri = Uri(scheme: 'sms', path: _phoneNumber);
+  if (await canLaunch(uri.toString())) {
+    await launch(uri.toString());
+  } else {
+    throw 'Could not launch $uri';
+  }
+}
+
+  void _makePhoneCall() async {
+    final uri = Uri(scheme: 'tel', path: _phoneNumber);
+    if (await canLaunch(uri.toString())) {
+      await launch(uri.toString());
+    } else {
+      throw 'Could not launch $uri';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -162,9 +181,21 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
-                      '전화번호: $_phoneNumber',
-                      style: const TextStyle(fontSize: 18),
+                    child: Row(
+                      children: [
+                        Text(
+                          '전화번호: $_phoneNumber',
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.call),
+                          onPressed: _makePhoneCall,
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.chat_bubble_outline),
+                          onPressed: _sendMessage,
+                        ),
+                      ],
                     ),
                   ),
                   Padding(
@@ -269,8 +300,8 @@ class BadgeBox extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 190,
-            height: 200,
+            width: 170,
+            height: 210,
             decoration: BoxDecoration(
               border: Border.all(color: const Color(0xFFA8DF8E)),
               borderRadius: BorderRadius.circular(10),

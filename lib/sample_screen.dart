@@ -430,8 +430,8 @@ class _SampleScreenState extends State<SampleScreen> {
         );
       },
       child: Container(
-        width: 190,
-        height: 220,
+        width: 170,
+        height: 210,
         decoration: BoxDecoration(
           color: Colors.white, // 박스의 배경색
           borderRadius: BorderRadius.circular(15), // 모서리 둥글게 만들기
