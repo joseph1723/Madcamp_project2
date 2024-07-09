@@ -281,7 +281,7 @@ class _SampleScreenState extends State<SampleScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            'asset/cat.png',
+                            'asset/logo_pink.png',
                             width: 200, // 이미지 크기 조절 (필요에 따라 조정)
                             height: 200,
                           ),
