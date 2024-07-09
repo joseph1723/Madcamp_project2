@@ -33,15 +33,18 @@ class _SampleScreenState extends State<SampleScreen> {
       print('id = ${googleUser.id}');
 
       // 토큰을 이용하여 id를 가져오는 함수 호출
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final String token = googleUser.email; // 예시로 email을 token으로 사용
 
-      final userId = await getIdByToken(token, googleUser.displayName??'Noname');
+      final userId =
+          await getIdByToken(token, googleUser.displayName ?? 'Noname');
 
       print("This is output userID: ${userId}");
       if (userId != null) {
-        Provider.of<UserModel>(context, listen: false).setUser(googleUser, userId);
+        Provider.of<UserModel>(context, listen: false)
+            .setUser(googleUser, userId);
       }
 
       // Print the access token
@@ -96,10 +99,12 @@ class _SampleScreenState extends State<SampleScreen> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as List;
-        List<Map<String, dynamic>> pointLists = data.map((item) => Map<String, dynamic>.from(item)).toList();
+        List<Map<String, dynamic>> pointLists =
+            data.map((item) => Map<String, dynamic>.from(item)).toList();
         return pointLists;
       } else {
-        print('Response not ok with url: $url, status: ${response.statusCode}, statusText: ${response.reasonPhrase}');
+        print(
+            'Response not ok with url: $url, status: ${response.statusCode}, statusText: ${response.reasonPhrase}');
         throw Exception('HTTP error! Status: ${response.statusCode}');
       }
     } catch (error) {
@@ -109,10 +114,16 @@ class _SampleScreenState extends State<SampleScreen> {
   }
 
   Future<String> tokentoid(String token, String name) async {
-    const String url = 'http://172.10.7.128:80/tokenstoid'; // 포인트를 추가할 엔드포인트 URL
+    const String url =
+        'http://172.10.7.128:80/tokenstoid'; // 포인트를 추가할 엔드포인트 URL
 
     try {
-      final user_id = await createUserLogin(name: name, email: token, id: token.split('@')[0], desc: '너의 산책은', phoneNumber: '0000000000');
+      final user_id = await createUserLogin(
+          name: name,
+          email: token,
+          id: token.split('@')[0],
+          desc: '너의 산책은',
+          phoneNumber: '0000000000');
       // 포인트 리스트 생성하기
       final response = await http.post(
         Uri.parse(url),
@@ -198,14 +209,16 @@ class _SampleScreenState extends State<SampleScreen> {
   void navigateToTab1() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const Tab1Screen()), // Tab1Screen으로 이동합니다.
+      MaterialPageRoute(
+          builder: (context) => const Tab1Screen()), // Tab1Screen으로 이동합니다.
     );
   }
 
   void navigateToGoogleMapScreen() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => GoogleMapScreen()), // GoogleMapScreen으로 이동합니다.
+      MaterialPageRoute(
+          builder: (context) => GoogleMapScreen()), // GoogleMapScreen으로 이동합니다.
     );
   }
 
@@ -213,7 +226,8 @@ class _SampleScreenState extends State<SampleScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MyProfilePage(), // Replace MyProfilePage() with your actual widget instance
+        builder: (context) =>
+            MyProfilePage(), // Replace MyProfilePage() with your actual widget instance
       ),
     );
   }
@@ -378,23 +392,30 @@ class _SampleScreenState extends State<SampleScreen> {
   }
 
   Widget _buildPointList(Map<String, dynamic> pointList) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Point List',
-          style: TextStyle(fontSize: 16),
-        ),
-        SizedBox(height: 20),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: pointList['points'].map<Widget>((point) {
-              return _pointBox(point);
-            }).toList(),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        children: [
+          Text(
+            'Point List',
+            style: TextStyle(fontSize: 20),
           ),
-        ),
-      ],
+          SizedBox(height: 30),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: pointList['points'].map<Widget>((point) {
+                return Row(
+                  children: [
+                    _pointBox(point),
+                    SizedBox(width: 10), // 박스 사이 간격 추가
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -409,22 +430,31 @@ class _SampleScreenState extends State<SampleScreen> {
         );
       },
       child: Container(
-        width: 149,
-        height: 187,
-        color: Colors.grey,
-        margin: EdgeInsets.only(right: 10),
+        width: 190,
+        height: 220,
+        decoration: BoxDecoration(
+          color: Colors.white, // 박스의 배경색
+          borderRadius: BorderRadius.circular(15), // 모서리 둥글게 만들기
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 5,
+              offset: Offset(2, 2),
+            ),
+          ],
+        ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 point['name'],
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.black),
               ),
               SizedBox(height: 8),
               Text(
                 'ID: ${point['_id']}',
-                style: TextStyle(color: Colors.white, fontSize: 12),
+                style: TextStyle(color: Colors.black, fontSize: 16),
               ),
             ],
           ),
@@ -457,14 +487,18 @@ class _SampleScreenState extends State<SampleScreen> {
                     _themeBox('${pointLists[0]['name']}', () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => PointDetailsScreen(pointList: pointLists[0])),
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                PointDetailsScreen(pointList: pointLists[0])),
                       );
                     }),
                   if (pointLists.length > 1)
                     _themeBox('${pointLists[1]['name']}', () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => PointDetailsScreen(pointList: pointLists[1])),
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                PointDetailsScreen(pointList: pointLists[1])),
                       );
                     }),
                 ],
