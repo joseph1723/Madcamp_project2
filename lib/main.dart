@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         child: AnimatedSplashScreen(
           splash: Image.asset('asset/splash_logo.png'),
           nextScreen: const SampleScreen(),
-          splashTransition: SplashTransition.rotationTransition,
+          splashTransition: SplashTransition.fadeTransition,
           duration: 1500,
           splashIconSize: 200,
           backgroundColor: Colors.transparent,
