@@ -379,7 +379,7 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('떨어진 거리: ${distance.toStringAsFixed(2)} meters'),
-                                  Text('${widget.pointList['points'][index]['address']}'),
+                                  Text(point['address']),
                                 ],
                               ),
                               onTap: () => navigateToPointDetails(context, point),
