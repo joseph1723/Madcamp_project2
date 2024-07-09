@@ -93,6 +93,32 @@ flutter:
     - asset/충남대-카이스트 열린길.png
     - asset/지식의 길.png
     - asset/(주의)몰입캠프생 주요 출몰지역!.png
+
+    
+    - asset/places/3번테마.png
+    - asset/places/4번테마.png
+    - asset/places/5번테마.png
+    - asset/places/id 카이스트.png
+    - asset/places/교수회관.png
+    - asset/places/교양분관.png
+    - asset/places/국립중앙과학관 창의나래관.png
+    - asset/places/꽃잎이 흩날리는 벚꽃길~(솔로탈출 100%)_theme.png
+    - asset/places/끝나지 않는 endless road…_theme.png
+    - asset/places/농업생명공학관 앞.png
+    - asset/places/농업생명과학대학 2호관 앞.png
+    - asset/places/미래기술관.png
+    - asset/places/미르관.png
+    - asset/places/실습실 앞.png
+    - asset/places/아름관.png
+    - asset/places/아리랑고개.png
+    - asset/places/어은동 입구.png
+    - asset/places/자연사관.png
+    - asset/places/지질박물관.png
+    - asset/places/충남대 중앙도서관.png
+    - asset/places/카이마루.png
+    - asset/places/현대 과학 기술 박물관.png
+    - asset/places/화폐박물관.png
+    - asset/places/희망관.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
