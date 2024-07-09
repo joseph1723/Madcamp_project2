@@ -135,10 +135,12 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
           const SizedBox(height: 20),
           CircleAvatar(
             radius: 100,
+            backgroundColor: const Color(0xFFFCFAE9), // CircleAvatar 배경색 설정
             backgroundImage: AssetImage('asset/img4.png'),
           ),
           const SizedBox(height: 30),
           Card(
+            color: const Color(0xFFFCFAE9), // Card 배경색 설정
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(

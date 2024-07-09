@@ -104,11 +104,11 @@ class _Tab1ScreenState extends State<Tab1Screen> {
                 prefixIcon: Icon(Icons.search, color: Color(0xFFA8DF8E)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Color(0xFFA8DF8E)),
+                  borderSide: BorderSide(color: Color(0xFFA8DF8E), width: 2), // 테두리 두께 설정
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Color(0xFFA8DF8E)),
+                  borderSide: BorderSide(color: Color(0xFFA8DF8E), width: 2), // 테두리 두께 설정
                 ),
                 contentPadding: EdgeInsets.symmetric(vertical: 10.0),
               ),
@@ -123,10 +123,20 @@ class _Tab1ScreenState extends State<Tab1Screen> {
                 itemBuilder: (context, index) {
                   return Card(
                     margin: EdgeInsets.all(10),
-                    child: ListTile(
-                      title: Text(filteredPointLists[index]['name']),
-                      subtitle: Text('Points: ${filteredPointLists[index]['points'].length}'),
-                      onTap: () => navigateToDetails(filteredPointLists[index]),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white, // Card 배경색 설정
+                        border: Border.all(
+                          color: Color(0xFFA8DF8E), // 테두리 색상 설정
+                          width: 2, // 테두리 두께 설정
+                        ),
+                        borderRadius: BorderRadius.circular(5), // Card의 기본 borderRadius 설정
+                      ),
+                      child: ListTile(
+                        title: Text(filteredPointLists[index]['name']),
+                        subtitle: Text('Points: ${filteredPointLists[index]['points'].length}'),
+                        onTap: () => navigateToDetails(filteredPointLists[index]),
+                      ),
                     ),
                   );
                 },

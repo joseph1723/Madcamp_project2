@@ -92,6 +92,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   );
                   Navigator.pop(context); // 수정 완료 후 이전 페이지로 이동
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFA8DF8E), // 버튼의 배경색 설정
+                ),
                 child: Text('저장'),
               ),
             ],

@@ -285,7 +285,7 @@ class _SampleScreenState extends State<SampleScreen> {
                             width: 200, // 이미지 크기 조절 (필요에 따라 조정)
                             height: 200,
                           ),
-                          SizedBox(height: 30), // 로그인 버튼과 이미지 사이 간격
+                          SizedBox(height: 50), // 로그인 버튼과 이미지 사이 간격
                           _loginButton('login', signInWithGoogle),
                           SizedBox(height: 100),
                         ],
@@ -336,9 +336,9 @@ class _SampleScreenState extends State<SampleScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset('asset/sun.png', height: 50),
-            SizedBox(height: 25),
           ],
         ),
+        SizedBox(height: 22),
         RichText(
           textAlign: TextAlign.center,
           text: TextSpan(

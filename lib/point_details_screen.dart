@@ -364,16 +364,26 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
                         double distance = distances[index];
                         return Card(
                           margin: EdgeInsets.symmetric(vertical: 8.0),
-                          child: ListTile(
-                            title: Text(point['name']),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Distance: ${distance.toStringAsFixed(2)} meters'),
-                                Text('ID: ${point['_id']}'),
-                              ],
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white, // Card 배경색 설정
+                              border: Border.all(
+                                color: Color(0xFFA8DF8E), // 테두리 색상 설정
+                                width: 2, // 테두리 두께 설정
+                              ),
+                              borderRadius: BorderRadius.circular(4), // Card의 기본 borderRadius 설정
                             ),
-                            onTap: () => navigateToPointDetails(context, point),
+                            child: ListTile(
+                              title: Text(point['name']),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Distance: ${distance.toStringAsFixed(2)} meters'),
+                                  Text('ID: ${point['_id']}'),
+                                ],
+                              ),
+                              onTap: () => navigateToPointDetails(context, point),
+                            ),
                           ),
                         );
                       },

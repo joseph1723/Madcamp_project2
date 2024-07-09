@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       home: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('asset/background.png'), 
+            image: AssetImage('asset/bg2.png'), 
             fit: BoxFit.cover, // 이미지가 화면에 맞게 조정됨
           ),
         ),

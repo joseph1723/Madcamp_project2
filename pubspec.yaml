@@ -93,6 +93,7 @@ flutter:
     - asset/splash_logo.png
     - asset/cat.png
     - asset/sample_screen_bg.png
+    - asset/bg2.png
     
   #   - images/a_dot_ham.jpeg
 
