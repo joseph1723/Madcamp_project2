@@ -22,6 +22,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
   late String _desc;
   late String _phoneNumber;
   late List<String> _complt_thema;
+  bool _isLoading = true; // 로딩 상태 추가
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
     _complt_thema = [];
     loadUserLogin(widget.userId);
   }
+
   Future<void> updateUserLogin(String userId, String name, String desc, String phoneNumber) async {
     String baseUrl = 'http://172.10.7.128:80'; // 서버의 기본 URL
     String url = '$baseUrl/userslogin/$userId'; // 수정할 사용자의 user_id
@@ -87,6 +89,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
         _desc = data['desc'] ?? '자기소개 없음';
         _phoneNumber = data['phonenumber'] ?? '';
         _complt_thema = data['complt_thema']?.cast<String>() ?? [];
+        _isLoading = false; // 로딩 완료
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -95,6 +98,9 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
           duration: const Duration(seconds: 3),
         ),
       );
+      setState(() {
+        _isLoading = false; // 로딩 완료 (오류 발생 시에도)
+      });
     }
   }
 
@@ -118,13 +124,17 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+    
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           CircleAvatar(
             radius: 100,
-            backgroundImage: AssetImage('asset/img2.png'),
+            backgroundImage: AssetImage('asset/img4.png'),
           ),
           const SizedBox(height: 30),
           Card(
