@@ -194,7 +194,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
       // 모든 지점에 도달했을 때 새 페이지로 이동
       if (allPointsReached) {
-        WidgetsBinding.instance!.addPostFrameCallback((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => WalkCompletePage(pointListName: pointList['name'])));
         });
       }

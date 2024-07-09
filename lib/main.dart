@@ -25,7 +25,9 @@ class MyApp extends StatelessWidget {
       title: 'Social Login App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        fontFamily: '교보'
+        scaffoldBackgroundColor: Colors.white,
+        fontFamily: '교보',
+        appBarTheme: AppBarTheme(color: Colors.white,),
       ),
       debugShowCheckedModeBanner: false,
       home: const SampleScreen(),

@@ -1,7 +1,7 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:goggle_login/user_my_page.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
 import 'package:goggle_login/login_platform.dart';
 import 'package:goggle_login/point_details_screen.dart';
 import 'package:goggle_login/point_list_provider.dart';
@@ -32,13 +32,8 @@ class _SampleScreenState extends State<SampleScreen> {
       print('email = ${googleUser.email}');
       print('id = ${googleUser.id}');
 
-
       // 토큰을 이용하여 id를 가져오는 함수 호출
-      // Get the authentication object
-
-
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
 
       final String token = googleUser.email; // 예시로 email을 token으로 사용
 
@@ -49,18 +44,18 @@ class _SampleScreenState extends State<SampleScreen> {
         Provider.of<UserModel>(context, listen: false).setUser(googleUser, userId);
       }
 
-
       // Print the access token
       print('Access token = ${googleAuth.accessToken}');
       print('ID token = ${googleAuth.idToken}');
 
       if (mounted) {
-      setState(() {
-        _loginPlatform = LoginPlatform.google;
-      });
-    }
+        setState(() {
+          _loginPlatform = LoginPlatform.google;
+        });
+      }
     }
   }
+
   Future<String> getIdByToken(String token, String name) async {
     const String baseUrl = 'http://172.10.7.128:80'; // 서버의 기본 URL
     final String url = '$baseUrl/tokenstoid/$token';
@@ -71,29 +66,24 @@ class _SampleScreenState extends State<SampleScreen> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         var userId = "";
-        if(data == null){
+        if (data == null) {
           userId = await tokentoid(token, name);
-        }
-        else {
+        } else {
           userId = data['user_id'] as String;
         }
         if (userId != null) {
           print('Returned id: $userId');
-          return (userId);
-          // 여기에서 id를 활용하여 추가적인 작업을 수행할 수 있습니다.
+          return userId;
         } else {
           print('User id not found.');
-
           throw Exception('Failed to find user id');
         }
       } else {
         print('Failed to get user id. Status code: ${response.statusCode}');
-
         throw Exception('Failed to get user id');
       }
     } catch (e) {
       print('Error fetching user id: $e');
-
       throw Exception('Error fetching user id');
     }
   }
@@ -138,7 +128,7 @@ class _SampleScreenState extends State<SampleScreen> {
       if (response.statusCode == 201) {
         var result = jsonDecode(response.body);
         print('Token added successfully');
-        return(user_id);
+        return user_id;
       } else {
         print('Failed to add token. Status code: ${response.statusCode}');
         throw Exception('Failed to add user id');
@@ -148,44 +138,46 @@ class _SampleScreenState extends State<SampleScreen> {
       throw Exception('Failed to add user id');
     }
   }
+
   Future<String> createUserLogin({
     required String name,
     required String email,
     required String id,
     required String desc,
     required String phoneNumber,
-}) async{
-  const String url = 'http://172.10.7.128:80/userslogin';
+  }) async {
+    const String url = 'http://172.10.7.128:80/userslogin';
 
-  final userData = {
-    'name': name,
-    'user_id': id,
-    'desc': desc,
-    'phoneNumber': phoneNumber,
-  };
+    final userData = {
+      'name': name,
+      'user_id': id,
+      'desc': desc,
+      'phoneNumber': phoneNumber,
+    };
 
-  try {
-  final response = await http.post(
-  Uri.parse(url),
-  headers: {
-  'Content-Type': 'application/json',
-  },
-  body: jsonEncode(userData),
-  );
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(userData),
+      );
 
-  if (response.statusCode != 201) {
-  print("url is $url");
-  throw Exception('HTTP error! Status: ${response.statusCode}');
+      if (response.statusCode != 201) {
+        print("url is $url");
+        throw Exception('HTTP error! Status: ${response.statusCode}');
+      }
+
+      final data = jsonDecode(response.body);
+      print('Created user login: $data');
+      return data['user_id'] ?? 'null';
+    } catch (error) {
+      print('Error creating user login: $error');
+      throw Exception('Error creating user login');
+    }
   }
 
-  final data = jsonDecode(response.body);
-  print('Created user login: $data');
-  return data['user_id'] ?? 'null';
-  } catch (error) {
-  print('Error creating user login: $error');
-  throw Exception('Error creating user login');
-  }
-}
   void signOut() async {
     Provider.of<PointListProvider>(context, listen: false).clearPointList();
     Provider.of<UserModel>(context, listen: false).clearUser();
@@ -206,16 +198,14 @@ class _SampleScreenState extends State<SampleScreen> {
   void navigateToTab1() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (context) => const Tab1Screen()), // Tab1Screen으로 이동합니다.
+      MaterialPageRoute(builder: (context) => const Tab1Screen()), // Tab1Screen으로 이동합니다.
     );
   }
 
   void navigateToGoogleMapScreen() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (context) => GoogleMapScreen()), // GoogleMapScreen으로 이동합니다.
+      MaterialPageRoute(builder: (context) => GoogleMapScreen()), // GoogleMapScreen으로 이동합니다.
     );
   }
 
@@ -232,18 +222,27 @@ class _SampleScreenState extends State<SampleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('산책꼬?'),
+        title: Row(
+          children: [
+            Image.asset(
+              'asset/logo_green.png', // 로고 이미지 파일의 경로
+              height: 40, // 로고의 높이
+            ),
+            SizedBox(width: 5), // 로고와 텍스트 사이의 간격
+            const Text('산책꼬?'),
+          ],
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.place), 
-            onPressed: navigateToTab1, 
+            icon: const Icon(Icons.place),
+            onPressed: navigateToTab1,
           ),
           IconButton(
-            icon: const Icon(Icons.map), // 지도 아이콘 사용 가능
-            onPressed: navigateToGoogleMapScreen, // Google 지도로 이동하는 함수 호출
+            icon: const Icon(Icons.map),
+            onPressed: navigateToGoogleMapScreen,
           ),
-          IconButton( // Add this IconButton for MyProfilePage
-            icon: const Icon(Icons.person), // Customize icon as per your requirement
+          IconButton(
+            icon: const Icon(Icons.person),
             onPressed: navigateToMyProfileScreen,
           ),
           if (_loginPlatform != LoginPlatform.none)
@@ -253,18 +252,25 @@ class _SampleScreenState extends State<SampleScreen> {
             ),
         ],
       ),
-      body: Center(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('asset/sample_screen_bg.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
           child: _loginPlatform != LoginPlatform.none
               ? _mainContent(context)
               : Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(height: 100), // 상단 여백 추가
+                    SizedBox(height: 130), // 상단 여백 추가
                     Text(
                       'Login',
                       style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.normal,
+                        fontSize: 35,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     Expanded(
@@ -272,20 +278,20 @@ class _SampleScreenState extends State<SampleScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            'asset/leaf.png',
-                            width: 150, // 이미지 크기 조절 (필요에 따라 조정)
-                            height: 150,
+                            'asset/cat.png',
+                            width: 200, // 이미지 크기 조절 (필요에 따라 조정)
+                            height: 200,
                           ),
-                          SizedBox(height: 50), // 로그인 버튼과 이미지 사이 간격
+                          SizedBox(height: 30), // 로그인 버튼과 이미지 사이 간격
                           _loginButton('login', signInWithGoogle),
-                          SizedBox(height: 60), 
+                          SizedBox(height: 100),
                         ],
                       ),
                     ),
                   ],
                 ),
-                ),
-
+        ),
+      ),
     );
   }
 
@@ -315,124 +321,114 @@ class _SampleScreenState extends State<SampleScreen> {
       ),
     );
   }
-  
- Widget _mainContent(BuildContext context) {
-  final pointListProvider = Provider.of<PointListProvider>(context);
-  final pointList = pointListProvider.pointList;
 
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0), // 왼쪽 끝에 패딩 추가
-            child: Image.asset('asset/weather1.png', height: 50),
-          ),
-          Spacer(),
-          Image.asset('asset/weather2.png', height: 50),
-          Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(right: 30.0), // 오른쪽 끝에 패딩 추가
-            child: Image.asset('asset/sun.png', height: 50),
-          ),
-          SizedBox(height: 5),
-        ],
-    ),
-      RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: _currentUser?.displayName ?? "User",
-              style: const TextStyle(
-                color: Color(0xFFA8DF8E),
-                fontSize: 24,
-                fontFamily: '교보',
-                fontWeight: FontWeight.bold,
-                height: 1.5,
-              ),
-            ),
-            const TextSpan(
-              text: '님 안녕하세요!\n오늘도 즐거운 산책을 시작해볼까요?',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 22,
-                fontFamily: '교보',
-                fontWeight: FontWeight.w400,
-                height: 1.5,
-              ),
-            ),
-          ],
-        ),
-      ),
-      const SizedBox(height: 5),
-      Image.asset(
-        'asset/장식.png',
-        height: 100,
-      ),
-      const SizedBox(height: 30),
-      pointList != null ? _buildPointList(pointList) : _buildThemeBox(),
-    ],
-  );
-}
+  Widget _mainContent(BuildContext context) {
+    final pointListProvider = Provider.of<PointListProvider>(context);
+    final pointList = pointListProvider.pointList;
 
-  Widget _buildPointList(Map<String, dynamic> pointList) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'Point List',
-        style: TextStyle(fontSize: 16),
-      ),
-      SizedBox(height: 20),
-      SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: pointList['points'].map<Widget>((point) {
-            return _pointBox(point);
-          }).toList(),
-        ),
-      ),
-    ],
-  );
-}
-
-Widget _pointBox(Map<String, dynamic> point) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PointDetail(point: point),
-        ),
-      );
-    },
-    child: Container(
-      width: 149,
-      height: 187,
-      color: Colors.grey,
-      margin: EdgeInsets.only(right: 10),
-      child: Center(
-        child: Column(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              point['name'],
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'ID: ${point['_id']}',
-              style: TextStyle(color: Colors.white, fontSize: 12),
-            ),
+            Image.asset('asset/sun.png', height: 50),
+            SizedBox(height: 25),
           ],
         ),
+        RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: _currentUser?.displayName ?? "User",
+                style: const TextStyle(
+                  color: Color(0xFFA8DF8E),
+                  fontSize: 24,
+                  fontFamily: '교보',
+                  fontWeight: FontWeight.bold,
+                  height: 1.5,
+                ),
+              ),
+              const TextSpan(
+                text: '님 안녕하세요!\n오늘도 즐거운 산책을 시작해볼까요?',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 22,
+                  fontFamily: '교보',
+                  fontWeight: FontWeight.w400,
+                  height: 1.5,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 5),
+        Image.asset(
+          'asset/장식.png',
+          height: 100,
+        ),
+        const SizedBox(height: 30),
+        pointList != null ? _buildPointList(pointList) : _buildThemeBox(),
+      ],
+    );
+  }
+
+  Widget _buildPointList(Map<String, dynamic> pointList) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Point List',
+          style: TextStyle(fontSize: 16),
+        ),
+        SizedBox(height: 20),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: pointList['points'].map<Widget>((point) {
+              return _pointBox(point);
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _pointBox(Map<String, dynamic> point) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PointDetail(point: point),
+          ),
+        );
+      },
+      child: Container(
+        width: 149,
+        height: 187,
+        color: Colors.grey,
+        margin: EdgeInsets.only(right: 10),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                point['name'],
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'ID: ${point['_id']}',
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              ),
+            ],
+          ),
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildThemeBox() {
     return FutureBuilder<List<Map<String, dynamic>>>(
@@ -479,18 +475,30 @@ Widget _pointBox(Map<String, dynamic> point) {
     );
   }
 
-
   Widget _themeBox(String title, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 149,
-        height: 187,
-        color: Colors.grey,
+        width: 190,
+        height: 220,
+        decoration: BoxDecoration(
+          color: Colors.white, // 박스의 배경색
+          borderRadius: BorderRadius.circular(15), // 모서리 둥글게 만들기
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 5,
+              offset: Offset(2, 2),
+            ),
+          ],
+        ),
         child: Center(
           child: Text(
             title,
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+            ),
           ),
         ),
       ),
