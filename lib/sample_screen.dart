@@ -410,15 +410,18 @@ class _SampleScreenState extends State<SampleScreen> {
           SizedBox(height: 30),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: Row(
-              children: pointList['points'].map<Widget>((point) {
-                return Row(
-                  children: [
-                    _pointBox(point),
-                    SizedBox(width: 10), // 박스 사이 간격 추가
-                  ],
-                );
-              }).toList(),
+            child: Container(
+              height: 220.0, // Set the desired height here
+              child: Row(
+                children: pointList['points'].map<Widget>((point) {
+                  return Row(
+                    children: [
+                      _pointBox(point),
+                      SizedBox(width: 10), // 박스 사이 간격 추가
+                    ],
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ],

@@ -16,7 +16,7 @@ class GoogleMapScreen extends StatefulWidget {
 class _GoogleMapScreenState extends State<GoogleMapScreen> {
   GoogleMapController? _controller;
   CameraPosition _initialCameraPosition = const CameraPosition(
-    target: LatLng(37.42796133580664, 122.085749655962),
+    target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14,
   );
   Position? _currentPosition;
@@ -111,7 +111,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
           CameraPosition(
             target:
                 LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
-            zoom: 14,
+            zoom: 35,
           ),
         ),
       );
@@ -158,7 +158,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
         if (coordinates != null && coordinates.length == 2) {
           final latitude = coordinates[0];
           final longitude = coordinates[1];
-          double distanceInMeters = 0.0;
+          double distanceInMeters = 9999999.0;
 
           if (latitude != null &&
               longitude != null &&
@@ -276,7 +276,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   }
 
   Widget _pointBox(Map<String, dynamic> point) {
-    double distanceInMeters = 0.0;
+    double distanceInMeters = 999999.0;
     if (_currentPosition != null) {
       final lat = point['location']['coordinates'][0];
       final lng = point['location']['coordinates'][1];
@@ -340,7 +340,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
           CameraPosition(
             target:
                 LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
-            zoom: 50,
+            zoom: 35,
           ),
         ),
       );
@@ -354,7 +354,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: target,
-          zoom: 50,
+          zoom: 25,
         ),
       ),
     );

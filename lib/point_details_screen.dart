@@ -359,7 +359,7 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
                     Center(
                       child: Text(
                       '여기 걸을까? :D',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), 
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFFA8DF8E),), 
                               ),
                         ),
                       SizedBox(height: 16.0),
