@@ -29,3 +29,7 @@ https://github.com/joseph1723/Madcamp_project2
     2. 당신의 프로필 사진, 이름, 이메일, 전화번호, 자기소개등이 표시됩니다.
     3. 당신에게 전화와 문자를 할 수 있는 버튼도 있습니다
     4. 프로필 수정 버튼을 누르면 이름, 이메일 전화번호, 자기소개, 그리고 프로필 사진을 변경할 수 있습니다.
+
+애플리케이션은 이 곳에서 다운받으실 수 있습니다~!
+   https://drive.google.com/file/d/1ppotFJhVCDuY6wkQ4VEzZIGLGc96_T-h/view?usp=sharing
+   
