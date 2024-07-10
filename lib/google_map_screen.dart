@@ -34,7 +34,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     });
 
     // 10초마다 위치 업데이트를 위한 타이머 설정
-    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
       _updateCurrentLocation();
     });
   }
@@ -106,15 +106,15 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
   void _updateCurrentPositionMarker() {
     if (_controller != null && _currentPosition != null) {
-      _controller!.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target:
-                LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
-            zoom: 35,
-          ),
-        ),
-      );
+      // _controller!.animateCamera(
+      //   CameraUpdate.newCameraPosition(
+      //     CameraPosition(
+      //       target:
+      //           LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+      //       zoom: 18.5,
+      //     ),
+      //   ),
+      // );
 
       // 현재 위치 마커 업데이트
       setState(() {
@@ -203,6 +203,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
       // 모든 지점에 도달했을 때 새 페이지로 이동
       if (allPointsReached) {
+        _timer?.cancel();
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => WalkCompletePage(
@@ -246,16 +247,22 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
           ),
           pointList != null ? _buildPointList(pointList) : Container(),
           if (pointList != null && pointList['points'].isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                onPressed: _moveCameraToCurrentLocation,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFA8DF8E), // 버튼 색상 변경
-                ),
-                child: const Text(
-                  '걷기 시작',
-                  style: TextStyle(color: Colors.black), // 글씨 색상 변경
+            SizedBox(
+              width: double.infinity, // Set the width to match the screen width
+              child: Container(
+                color: const Color(0xFFFCFAE9), // Set the background color here
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: _moveCameraToCurrentLocation,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFA8DF8E), // 버튼 색상 변경
+                    ),
+                    child: const Text(
+                      '내 위치로',
+                      style: TextStyle(color: Colors.black), // 글씨 색상 변경
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -267,10 +274,13 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   Widget _buildPointList(Map<String, dynamic> pointList) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Row(
-        children: pointList['points'].map<Widget>((point) {
-          return _pointBox(point);
-        }).toList(),
+      child: Container(
+        color: const Color(0xFFFCFAE9), // Set the background color here
+        child: Row(
+          children: pointList['points'].map<Widget>((point) {
+            return _pointBox(point);
+          }).toList(),
+        ),
       ),
     );
   }
@@ -324,6 +334,11 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                 width: 100,
                 height: 100,
               ),
+              const SizedBox(height: 12),
+              Text(
+                '${distanceInMeters.toStringAsFixed(2)} 미터 남음',
+                style: const TextStyle(color: Colors.black, fontSize: 14),
+              ),
             ],
           ),
         ),
@@ -340,7 +355,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
           CameraPosition(
             target:
                 LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
-            zoom: 35,
+            zoom: 18.5,
           ),
         ),
       );
@@ -350,11 +365,12 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   }
 
   void _moveCameraToPoint(LatLng target) {
+    print("MOVECAMERACALLED.DEFINITLLY");
     _controller?.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: target,
-          zoom: 25,
+          zoom: 18.5,
         ),
       ),
     );

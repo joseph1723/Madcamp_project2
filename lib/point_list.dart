@@ -134,7 +134,7 @@ class _Tab1ScreenState extends State<Tab1Screen> {
                       ),
                       child: ListTile(
                         title: Text(filteredPointLists[index]['name']),
-                        subtitle: Text('Points: ${filteredPointLists[index]['points'].length}'),
+                        subtitle: Text('목표 지점 수: ${filteredPointLists[index]['points'].length} 개'),
                         onTap: () => navigateToDetails(filteredPointLists[index]),
                       ),
                     ),

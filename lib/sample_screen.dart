@@ -285,7 +285,7 @@ class _SampleScreenState extends State<SampleScreen> {
               : Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(height: screenHeight * 0.15), // 상단 여백 추가
+                    SizedBox(height: screenHeight * 0.20), // 상단 여백 추가
                     Text(
                       'Login',
                       style: TextStyle(
@@ -293,17 +293,19 @@ class _SampleScreenState extends State<SampleScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    SizedBox(height: screenHeight * 0.01),
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        
                         children: [
                           Image.asset(
-                            'asset/logo_pink.png',
-                            width: screenWidth * 0.5, // 이미지 크기 조절
-                            height: screenHeight * 0.25,
+                            'asset/cat2.png',
+                            width: 200, // 절대 크기 설정
+                            height: 200,
                           ),
                           SizedBox(
-                              height: screenHeight * 0.05), // 로그인 버튼과 이미지 사이 간격
+                              height: screenHeight * 0.08), // 로그인 버튼과 이미지 사이 간격
                           _loginButton('login', signInWithGoogle),
                           SizedBox(height: screenHeight * 0.1),
                         ],
@@ -694,7 +696,7 @@ class _SampleScreenState extends State<SampleScreen> {
             SizedBox(height: 25), // 이미지와 텍스트 사이의 간격
             Text(
               title,
-              textAlign: textAlign, // Center align text
+              textAlign: TextAlign.center, // Center align text
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.black,
