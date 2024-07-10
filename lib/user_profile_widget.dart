@@ -293,19 +293,23 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
           const SizedBox(height: 20),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: _complt_thema.map((theme) {
-                String imagePath = 'asset/$theme.png';
-                String description = theme;
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: _complt_thema.map((theme) {
+                  String imagePath = 'asset/$theme.png';
+                  String description = theme;
 
-                return BadgeBox(
-                  imagePath: imagePath,
-                  description: description,
-                );
-              }).toList(),
+                  return BadgeBox(
+                    imagePath: imagePath,
+                    description: description,
+                  );
+                }).toList(),
+              ),
             ),
           ),
+
           const SizedBox(height: 20),
         ],
       ),
@@ -338,7 +342,7 @@ class BadgeBox extends StatelessWidget {
           Text(
             description,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 12),
           ),
         ],
       ),

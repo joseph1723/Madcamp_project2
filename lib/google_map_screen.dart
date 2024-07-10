@@ -152,7 +152,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
         if (coordinates != null && coordinates.length == 2) {
           final latitude = coordinates[0];
           final longitude = coordinates[1];
-          double distanceInMeters = 0.0;
+          double distanceInMeters = 99999.0;
 
           if (latitude != null && longitude != null && _currentPosition != null) {
             distanceInMeters = Geolocator.distanceBetween(
@@ -239,9 +239,16 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                 onPressed: _moveCameraToCurrentLocation,
-                child: const Text('걷기 시작'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFA8DF8E), // 버튼 색상 변경
+                ),
+                child: const Text(
+                  '걷기 시작',
+                  style: TextStyle(color: Colors.black), // 글씨 색상 변경
+                ),
               ),
             ),
+
         ],
       ),
     );
@@ -286,30 +293,32 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       child: Container(
         width: 149,
         height: 187,
-        color: Colors.grey,
+        decoration: BoxDecoration(
+              color: pointReached ? const Color(0xFFA8DF8E): const Color(0xFFFCFAE9),
+              borderRadius: BorderRadius.circular(15),
+            ),
+
         margin: const EdgeInsets.all(10),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 point['name'],
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.black, fontSize: 16),
               ),
-              const SizedBox(height: 8),
-              Text(
-                'ID: ${point['_id']}',
-                style: const TextStyle(color: Colors.white, fontSize: 12),
-              ),
-              Text(
-                'Distance: ${distanceInMeters.toStringAsFixed(2)} meters'
-                    '${pointReached ? "\n도달했습니다" : ""}',
-                style: TextStyle(color: Colors.white),
+              const SizedBox(height: 12),
+              Image.asset(
+                'asset/places/${point['name']}.png',
+                width: 100,
+                height: 100,
               ),
             ],
           ),
         ),
       ),
+      
     );
   }
 

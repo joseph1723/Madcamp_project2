@@ -491,12 +491,16 @@ class _PointDetailState extends State<PointDetail> {
             } else {
               Position currentPosition = snapshot.data!;
               return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center, // Change alignment to center
                 children: [
-                  Text('${widget.point['name']}'),
-                  SizedBox(height: 8.0),
-                  Text('${widget.point['address']}'),
-                  SizedBox(height: 16.0),
+                  Text(
+                    '${widget.point['name']}',
+                    style: TextStyle(fontSize: 26), // Set font size to 22
+                  ),
+                  SizedBox(height: 6.0),
+                  Text('${widget.point['address']}', 
+                    style: TextStyle(fontSize: 22),),
+                  SizedBox(height: 12.0),
                   FutureBuilder<double>(
                     future: distanceFuture,
                     builder: (context, snapshot) {
@@ -507,12 +511,20 @@ class _PointDetailState extends State<PointDetail> {
                       } else {
                         double distance = snapshot.data!;
                         return Text(
-                            '여기서부터 ${distance.toStringAsFixed(2)} meters 떨어짐');
+                          '여기서부터 ${distance.toStringAsFixed(2)} meters 떨어짐',
+                          style: TextStyle(color: Colors.red), // Set text color to red
+                        );
                       }
                     },
                   ),
+                  SizedBox(height: 20.0),
+                  Image.asset(
+                    'asset/places/${widget.point['name']}.png',
+                    fit: BoxFit.contain, // Ensure image fits within the container
+                  ),
                 ],
               );
+
             }
           },
         ),
