@@ -428,50 +428,49 @@ class _SampleScreenState extends State<SampleScreen> {
 
   Widget _pointBox(Map<String, dynamic> point) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PointDetail(point: point),
-          ),
-        );
-      },
-      child: Container(
-        width: 170,
-        height: 210,
-        decoration: BoxDecoration(
-          color: Colors.white, // 박스의 배경색
-          borderRadius: BorderRadius.circular(15), // 모서리 둥글게 만들기
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 5,
-              offset: Offset(2, 2),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PointDetail(point: point),
             ),
-          ],
-        ),
-        child: Center(
+          );
+        },
+        child: Container(
+          width: 170,
+          height: 210,
+          decoration: BoxDecoration(
+            color: Colors.white, // 박스의 배경색
+            borderRadius: BorderRadius.circular(15), // 모서리 둥글게 만들기
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 5,
+                offset: Offset(2, 2),
+              ),
+            ],
+          ),
+          child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-            Image.asset(
-            'asset/${point['name']}.png',
-              width: 100,
-              height: 100,
+                Image.asset(
+                  'asset/places/${point['name']}.png',
+                  width: 100,
+                  height: 100,
+                ),
+                SizedBox(height: 10), // 이미지와 텍스트 사이의 간격
+                Text(
+                  point['name'],
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 10), // 이미지와 텍스트 사이의 간격
-            Text(
-              point['name'],
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
-      ),
-      )
-    );
+          ),
+        ));
   }
 
   // Widget _buildThemeBox() {
@@ -615,30 +614,39 @@ class _SampleScreenState extends State<SampleScreen> {
                   if (pointLists.length > 0)
                     Flexible(
                       child: _themeBox(
-                          '${pointLists[0]['name']}', screenWidth, screenHeight,
-                          () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                PointDetailsScreen(pointList: pointLists[0]),
-                          ),
-                        );
-                      }),
+                        '${pointLists[0]['name']}',
+                        screenWidth,
+                        screenHeight,
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PointDetailsScreen(pointList: pointLists[0]),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   if (pointLists.length > 1)
                     Flexible(
                       child: _themeBox(
-                          '${pointLists[1]['name']}', screenWidth, screenHeight,
-                          () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                PointDetailsScreen(pointList: pointLists[1]),
-                          ),
-                        );
-                      }),
+                        '${pointLists[1]['name']}',
+                        screenWidth,
+                        screenHeight,
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PointDetailsScreen(pointList: pointLists[1]),
+                            ),
+                          );
+                        },
+                        textAlign: TextAlign.center, // Center align text
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 10.0), // Add horizontal padding
+                      ),
                     ),
                 ],
               ),
@@ -651,15 +659,18 @@ class _SampleScreenState extends State<SampleScreen> {
     );
   }
 
-  Widget _themeBox(String title, double screenWidth, double screenHeight,
-      VoidCallback onTap) {
+  Widget _themeBox(
+      String title, double screenWidth, double screenHeight, VoidCallback onTap,
+      {TextAlign textAlign = TextAlign.left,
+      EdgeInsets padding = const EdgeInsets.all(0)}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: screenWidth * 0.45, // 화면 너비의 45%를 사용
-        height: screenHeight * 0.25, // 화면 높이의 25%를 사용
+        height: screenHeight * 0.30, // 화면 높이의 30%를 사용
+        padding: padding,
         decoration: BoxDecoration(
-          color: Colors.white, // 박스의 배경색
+          color: const Color(0xFFFCFAE9), // 박스의 배경색
           borderRadius: BorderRadius.circular(15), // 모서리 둥글게 만들기
           boxShadow: [
             BoxShadow(
@@ -669,24 +680,25 @@ class _SampleScreenState extends State<SampleScreen> {
             ),
           ],
         ),
-    child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'asset/${title}_theme.png',
-                width: 100,
-                height: 100,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'asset/places/${title}_theme.png',
+              width: 100,
+              height: 100,
+            ),
+            SizedBox(height: 25), // 이미지와 텍스트 사이의 간격
+            Text(
+              title,
+              textAlign: textAlign, // Center align text
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.black,
               ),
-              SizedBox(height: 10), // 이미지와 텍스트 사이의 간격
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
+        ),
       ),
     );
   }

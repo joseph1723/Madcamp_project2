@@ -185,57 +185,59 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
             backgroundColor: const Color(0xFFFCFAE9), // CircleAvatar 배경색 설정
           ),
           const SizedBox(height: 30),
-          Card(
-            color: const Color(0xFFFCFAE9), // Card 배경색 설정
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
-                      'Name: $_name',
-                      style: const TextStyle(fontSize: 18),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Card(
+              color: const Color(0xFFFCFAE9), // Card 배경색 설정
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        'Name: $_name',
+                        style: const TextStyle(fontSize: 18),
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
-                      'Email: ${widget.userId}', // 이메일을 userId로 대체
-                      style: const TextStyle(fontSize: 18),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        'Email: ${widget.userId}', // 이메일을 userId로 대체
+                        style: const TextStyle(fontSize: 18),
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          '전화번호: $_phoneNumber',
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.call),
-                          onPressed: _makePhoneCall,
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.chat_bubble_outline),
-                          onPressed: _sendMessage,
-                        ),
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            '전화번호: $_phoneNumber',
+                            style: const TextStyle(fontSize: 18),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.call),
+                            onPressed: _makePhoneCall,
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.chat_bubble_outline),
+                            onPressed: _sendMessage,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
-                      '자기소개: $_desc',
-                      style: const TextStyle(fontSize: 18),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        '자기소개: $_desc',
+                        style: const TextStyle(fontSize: 18),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ),
+            ),),
           if (widget.isEditable) ...[
             const SizedBox(height: 30),
             SizedBox(
