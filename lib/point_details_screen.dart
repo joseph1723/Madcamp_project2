@@ -338,79 +338,97 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
           ),
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
+      child: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '어디 걸을까? :D',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            Expanded(
-              child: FutureBuilder<List<double>>(
-                future: distancesFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error calculating distances'));
-                  } else {
-                    List<double> distances = snapshot.data!;
-                    return ListView.builder(
-                      itemCount: widget.pointList['points'].length,
-                      itemBuilder: (context, index) {
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.asset(
+                  'asset/places/${widget.pointList['name']}_theme.png',
+                  fit: BoxFit.contain, // 이미지가 부모 요소에 맞추어 확대 또는 축소되도록 설정
+                ),
+                SizedBox(height: 16.0),
+                Center(
+                child: Text(
+                  widget.pointList['desc'],
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), 
+                      ),
+                ),
+                  SizedBox(height: 12.0),
+                    Center(
+                      child: Text(
+                      '여기 걸을까? :D',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), 
+                              ),
+                        ),
+                      SizedBox(height: 16.0),
+                        FutureBuilder<List<double>>(
+                        future: distancesFuture,
+                        builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                        return Center(child: Text('Error calculating distances'));
+                        } else {
+                        List<double> distances = snapshot.data!;
+                        return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: widget.pointList['points'].length,
+                        itemBuilder: (context, index) {
                         final point = widget.pointList['points'][index];
                         double distance = distances[index];
                         return Card(
-                          margin: EdgeInsets.symmetric(vertical: 8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white, // Card 배경색 설정
-                              border: Border.all(
-                                color: Color(0xFFA8DF8E), // 테두리 색상 설정
-                                width: 2, // 테두리 두께 설정
-                              ),
-                              borderRadius: BorderRadius.circular(10), // Card의 기본 borderRadius 설정
-                            ),
-                            child: ListTile(
-                              title: Text(point['name']),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('떨어진 거리: ${distance.toStringAsFixed(2)} meters'),
-                                  Text(point['address']),
-                                ],
-                              ),
-                              onTap: () => navigateToPointDetails(context, point),
-                            ),
-                          ),
+                        margin: EdgeInsets.symmetric(vertical: 8.0),
+                        child: Container(
+                        decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                        color: Color(0xFFA8DF8E),
+                        width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ListTile(
+                        title: Text(point['name']),
+                        subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                        Text('떨어진 거리: ${distance.toStringAsFixed(2)} meters'),
+                        Text(point['address']),
+                        ],
+                        ),
+                        onTap: () => navigateToPointDetails(context, point),
+                        ),
+                        ),
                         );
-                      },
-                    );
-                  }
-                },
-              ),
-            ),
-            SizedBox(height: 16.0),
-            Center(
-              child: ElevatedButton(
-                onPressed: () => savePointList(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFA8DF8E),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  minimumSize: Size(200, 50),
-                ),
-                child: Text('테마 선택',
+                        },
+                        );
+                        }
+                        },
+                        ),
+                        SizedBox(height: 16.0),
+                        Center(
+                        child: ElevatedButton(
+                        onPressed: () => savePointList(context),
+                        style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFA8DF8E),
+                        shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        ),
+                        minimumSize: Size(200, 50),
+                        ),
+                    child: Text(
+                  '테마 선택',
                 style: TextStyle(fontSize: 20),
-                ),
               ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        )
     );
   }
 }

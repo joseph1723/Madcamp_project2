@@ -7,7 +7,7 @@ import 'point_list_provider.dart';
 import 'walk_complete_screen.dart'; // 새로운 페이지 import
 
 class GoogleMapScreen extends StatefulWidget {
-  const GoogleMapScreen({Key? key}) : super(key: key);
+  const GoogleMapScreen({super.key});
 
   @override
   _GoogleMapScreenState createState() => _GoogleMapScreenState();
@@ -21,7 +21,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   );
   Position? _currentPosition;
   Timer? _timer;
-  Set<Marker> _markers = {};
+  final Set<Marker> _markers = {};
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     });
 
     // 10초마다 위치 업데이트를 위한 타이머 설정
-    _timer = Timer.periodic(Duration(seconds: 10), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
       _updateCurrentLocation();
     });
   }
@@ -109,7 +109,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       _controller!.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
-            target: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+            target:
+                LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
             zoom: 14,
           ),
         ),
@@ -117,13 +118,16 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
 
       // 현재 위치 마커 업데이트
       setState(() {
-        _markers.removeWhere((marker) => marker.markerId.value == 'current_position');
+        _markers.removeWhere(
+            (marker) => marker.markerId.value == 'current_position');
         _markers.add(
           Marker(
-            markerId: MarkerId('current_position'),
-            position: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
-            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen), // 빨간색 아이콘으로 변경
-            infoWindow: InfoWindow(title: '현재 위치'),
+            markerId: const MarkerId('current_position'),
+            position:
+                LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+            icon: BitmapDescriptor.defaultMarkerWithHue(
+                BitmapDescriptor.hueGreen), // 빨간색 아이콘으로 변경
+            infoWindow: const InfoWindow(title: '현재 위치'),
           ),
         );
       });
@@ -137,8 +141,10 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       markers.add(
         Marker(
           markerId: const MarkerId('current_position'),
-          position: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed), // 빨간색 아이콘으로 변경
+          position:
+              LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+              BitmapDescriptor.hueRed), // 빨간색 아이콘으로 변경
           infoWindow: const InfoWindow(title: '현재 위치'),
         ),
       );
@@ -152,9 +158,11 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
         if (coordinates != null && coordinates.length == 2) {
           final latitude = coordinates[0];
           final longitude = coordinates[1];
-          double distanceInMeters = 99999.0;
+          double distanceInMeters = 0.0;
 
-          if (latitude != null && longitude != null && _currentPosition != null) {
+          if (latitude != null &&
+              longitude != null &&
+              _currentPosition != null) {
             distanceInMeters = Geolocator.distanceBetween(
               _currentPosition!.latitude,
               _currentPosition!.longitude,
@@ -174,7 +182,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
               position: LatLng(latitude, longitude),
               infoWindow: InfoWindow(
                 title: point['name'],
-                snippet: 'Distance: ${distanceInMeters.toStringAsFixed(2)} meters'
+                snippet:
+                    'Distance: ${distanceInMeters.toStringAsFixed(2)} meters'
                     '${pointReached ? "\n도달했습니다" : ""}',
               ),
             ),
@@ -195,14 +204,16 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       // 모든 지점에 도달했을 때 새 페이지로 이동
       if (allPointsReached) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => WalkCompletePage(pointListName: pointList['name'])));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => WalkCompletePage(
+                  pointListName: pointList['name'],
+                  pointListReview: pointList['review'])));
         });
       }
     }
 
     return markers;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -240,7 +251,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
               child: ElevatedButton(
                 onPressed: _moveCameraToCurrentLocation,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFA8DF8E), // 버튼 색상 변경
+                  backgroundColor: const Color(0xFFA8DF8E), // 버튼 색상 변경
                 ),
                 child: const Text(
                   '걷기 시작',
@@ -248,7 +259,6 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                 ),
               ),
             ),
-
         ],
       ),
     );
@@ -294,10 +304,10 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
         width: 149,
         height: 187,
         decoration: BoxDecoration(
-              color: pointReached ? const Color(0xFFA8DF8E): const Color(0xFFFCFAE9),
-              borderRadius: BorderRadius.circular(15),
-            ),
-
+          color:
+              pointReached ? const Color(0xFFA8DF8E) : const Color(0xFFFCFAE9),
+          borderRadius: BorderRadius.circular(15),
+        ),
         margin: const EdgeInsets.all(10),
         child: Center(
           child: Column(
@@ -318,17 +328,18 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
           ),
         ),
       ),
-      
     );
   }
 
   void _moveCameraToCurrentLocation() {
     if (_currentPosition != null && _controller != null) {
-      print('Current position: Latitude = ${_currentPosition!.latitude}, Longitude = ${_currentPosition!.longitude}');
+      print(
+          'Current position: Latitude = ${_currentPosition!.latitude}, Longitude = ${_currentPosition!.longitude}');
       _controller!.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
-            target: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+            target:
+                LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
             zoom: 50,
           ),
         ),

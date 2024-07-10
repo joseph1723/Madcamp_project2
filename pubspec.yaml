@@ -93,11 +93,12 @@ flutter:
     - asset/충남대-카이스트 열린길.png
     - asset/지식의 길.png
     - asset/(주의)몰입캠프생 주요 출몰지역!.png
+    - asset/line.png
 
     
-    - asset/places/3번테마.png
-    - asset/places/4번테마.png
-    - asset/places/5번테마.png
+    - asset/places/(주의)몰입캠프생 주요 출몰지역!_theme.png
+    - asset/places/지식의 길_theme.png
+    - asset/places/충남대-카이스트 열린길_theme.png
     - asset/places/id 카이스트.png
     - asset/places/교수회관.png
     - asset/places/교양분관.png
