@@ -9,8 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'point_list.dart'; // tab1 스크린을 정의한 파일을 import합니다.
 import 'user_model.dart';
-import 'google_map_screen.dart'; // google_map_screen을 import합니다.
-import 'theme_screen.dart';
+import 'google_map_screen.dart'; 
 
 class SampleScreen extends StatefulWidget {
   const SampleScreen({super.key});

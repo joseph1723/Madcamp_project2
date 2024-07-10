@@ -91,7 +91,7 @@ class _Tab1ScreenState extends State<Tab1Screen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Point Lists'),
+        title: Text('테마 목록'),
       ),
       body: Column(
         children: [
