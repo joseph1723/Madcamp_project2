@@ -21,7 +21,8 @@ https://github.com/joseph1723/Madcamp_project2
     4. 목표 지점으로부터 10미터 아래로 다가가면 도달한 것입니다. 색이 연두색으로 바뀌니 쉽게 알 수 있습니다. 이제 다음 지점으로 이동하시면 됩니다.
     5. 모든 지점을 돌파하셨다면, 축하합니다! 당신은 당신의 산책 테마를 모두 완료하셨습니다. 산책 테마를 모두 완료하신 기념으로 뱃지를 수여해 드립니다. 받은 뱃지는 자신의 프로필에서 확인하실 수 있습니다.
 
-[Recorder_10072024_170748 (online-video-cutter.com) (1).mp4](https://prod-files-secure.s3.us-west-2.amazonaws.com/f6cb388f-3934-47d6-9928-26d2e10eb0fc/2a892fa0-7289-4b3c-ab11-fd59113f47b2/Recorder_10072024_170748_(online-video-cutter.com)_(1).mp4)
+![Recorder_10072024_170748 (online-video-cutter](https://github.com/joseph1723/Madcamp_project2/assets/85298954/475e7671-39aa-49a4-908b-be5e59998ad7)
+
 
 1. **유저 프로필**
     1. 이곳에선 당신의 프로필을 확인할 수 있습니다
